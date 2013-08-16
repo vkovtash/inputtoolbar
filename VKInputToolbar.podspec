@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/vkovtash/inputtoolbar"
   s.license      = 'MIT'
   s.author       = { "Vlad Kovtash" => "vlad@kovtash.com" }
-  s.source       = { :git => "https://github.com/vkovtash/inputtoolbar.git", :tag => "v#{s.version}"}
+  s.source       = { :git => "https://github.com/vkovtash/inputtoolbar.git", :tag => s.version.to_s }
   s.platform     = :ios
   s.source_files = 'UIInputToolbarSample/Classes/UIInputToolbar'
   s.resources = "UIInputToolbarSample/Resources/*.png"
