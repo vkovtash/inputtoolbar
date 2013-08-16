@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.summary      = "Messages style input toolbar for iOS."
   s.homepage     = "https://github.com/vkovtash/inputtoolbar"
   s.license      = 'MIT'
-  s.author       = { "Vlad Kovtash" => "vlad@kovtash.com" }
+  s.author       = { "Vlad Kovtash" => "v.kovtash@gmail.com" }
   s.source       = { :git => "https://github.com/vkovtash/inputtoolbar.git", :tag => s.version.to_s }
   s.platform     = :ios
   s.source_files = 'UIInputToolbarSample/Classes/UIInputToolbar'
