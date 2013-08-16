@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name         = "InputToolbar"
+  s.name         = "VKInputToolbar"
   s.version      = "0.2"
   s.summary      = "Messages style input toolbar for iOS."
   s.homepage     = "https://github.com/vkovtash/inputtoolbar"
