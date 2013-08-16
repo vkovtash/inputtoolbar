@@ -38,19 +38,19 @@
 
 @synthesize textView;
 @synthesize inputButton;
-@synthesize delegate;
+@synthesize inputDelegate = _inputDelegate;
 
 -(void)inputButtonPressed
 {
-    if ([delegate respondsToSelector:@selector(inputButtonPressed:)]) 
+    if ([_inputDelegate respondsToSelector:@selector(inputButtonPressed:)])
     {
-        [delegate inputButtonPressed:self];
+        [_inputDelegate inputButtonPressed:self];
     }
 }
 
 - (void)plusButtonPressed{
-    if ([delegate respondsToSelector:@selector(plusButtonPressed:)]) {
-        [self.delegate plusButtonPressed:self];
+    if ([self.inputDelegate respondsToSelector:@selector(plusButtonPressed:)]) {
+        [self.inputDelegate plusButtonPressed:self];
     }
 }
 
@@ -154,14 +154,14 @@
     r.origin.y += diff;
     r.size.height -= diff;
     
-    if ([self.delegate respondsToSelector:@selector(inputToolbar:WillChangeHeight:)]) {
-        [self.delegate inputToolbar:self WillChangeHeight:r.size.height];
+    if ([self.inputDelegate respondsToSelector:@selector(inputToolbar:WillChangeHeight:)]) {
+        [self.inputDelegate inputToolbar:self WillChangeHeight:r.size.height];
     }
     
     self.frame = r;
     
-    if ([self.delegate respondsToSelector:@selector(inputToolbar:DidChangeHeight:)]) {
-        [self.delegate inputToolbar:self DidChangeHeight:self.frame.size.height];
+    if ([self.inputDelegate respondsToSelector:@selector(inputToolbar:DidChangeHeight:)]) {
+        [self.inputDelegate inputToolbar:self DidChangeHeight:self.frame.size.height];
     }
 }
 
@@ -173,47 +173,47 @@
     else
         self.inputButton.enabled = NO;
     
-    if ([self.delegate respondsToSelector:@selector(inputToolbarViewDidChange:)]) {
-        [self.delegate inputToolbarViewDidChange:self];
+    if ([self.inputDelegate respondsToSelector:@selector(inputToolbarViewDidChange:)]) {
+        [self.inputDelegate inputToolbarViewDidChange:self];
     }
 }
 
 - (BOOL)expandingTextViewShouldBeginEditing:(UIExpandingTextView *)expandingTextView{
-    if ([self.delegate respondsToSelector:@selector(inputToolbarShouldBeginEditing:)]) {
-        return [self.delegate inputToolbarShouldBeginEditing:self];
+    if ([self.inputDelegate respondsToSelector:@selector(inputToolbarShouldBeginEditing:)]) {
+        return [self.inputDelegate inputToolbarShouldBeginEditing:self];
     }
     return YES;
 }
 
 - (BOOL)expandingTextViewShouldEndEditing:(UIExpandingTextView *)expandingTextView{
-    if ([self.delegate respondsToSelector:@selector(inputToolbarShouldEndEditing:)]) {
-        return [self.delegate inputToolbarShouldEndEditing:self];
+    if ([self.inputDelegate respondsToSelector:@selector(inputToolbarShouldEndEditing:)]) {
+        return [self.inputDelegate inputToolbarShouldEndEditing:self];
     }
     return YES;
 }
 
 - (void)expandingTextViewDidBeginEditing:(UIExpandingTextView *)expandingTextView{
-    if ([self.delegate respondsToSelector:@selector(inputToolbarDidBeginEditing:)]) {
-        [self.delegate inputToolbarDidBeginEditing:self];
+    if ([self.inputDelegate respondsToSelector:@selector(inputToolbarDidBeginEditing:)]) {
+        [self.inputDelegate inputToolbarDidBeginEditing:self];
     }
 }
 
 - (void)expandingTextViewDidEndEditing:(UIExpandingTextView *)expandingTextView{
-    if ([self.delegate respondsToSelector:@selector(inputToolbarDidEndEditing:)]) {
-        [self.delegate inputToolbarDidEndEditing:self];
+    if ([self.inputDelegate respondsToSelector:@selector(inputToolbarDidEndEditing:)]) {
+        [self.inputDelegate inputToolbarDidEndEditing:self];
     }
 }
 
 - (BOOL)expandingTextView:(UIExpandingTextView *)expandingTextView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-    if ([self.delegate respondsToSelector:@selector(inputToolbar:shouldChangeTextInRange:replacementText:)]) {
-        return [self.delegate inputToolbar:self shouldChangeTextInRange:range replacementText:text];
+    if ([self.inputDelegate respondsToSelector:@selector(inputToolbar:shouldChangeTextInRange:replacementText:)]) {
+        return [self.inputDelegate inputToolbar:self shouldChangeTextInRange:range replacementText:text];
     }
     return YES;
 }
 
 - (void)expandingTextViewDidChangeSelection:(UIExpandingTextView *)expandingTextView{
-    if ([self.delegate respondsToSelector:@selector(inputToolbarViewDidChangeSelection:)]) {
-        [self.delegate inputToolbarViewDidChangeSelection:self];
+    if ([self.inputDelegate respondsToSelector:@selector(inputToolbarViewDidChangeSelection:)]) {
+        [self.inputDelegate inputToolbarViewDidChangeSelection:self];
     }
 }
 
