@@ -53,6 +53,7 @@
 @synthesize minimumHeight = _minimumHeight;
 @synthesize maximumHeight = _maximumHeight;
 @synthesize forceSizeUpdate = _forceSizeUpdate;
+@synthesize delegate = _delegate;
 
 - (id)initWithFrame:(CGRect)frame 
 {
