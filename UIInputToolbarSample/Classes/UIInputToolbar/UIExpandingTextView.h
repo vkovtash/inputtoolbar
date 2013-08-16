@@ -1,19 +1,19 @@
 /*
  *  UIExpandingTextView.h
- *  
- *  Created by Brandon Hamilton on 2011/05/03.
- *  Copyright 2011 Brandon Hamilton.
- *  
+ *
+ *  Created by Vlad Kovtash on 2013/03/26.
+ *  Copyright 2013 Vlad Kovtash.
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,6 +21,11 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
+ */
+
+/*
+ *  This class is based on UIExpandingTextView by Brandon Hamilton
+ *  https://github.com/brandonhamilton/inputtoolbar
  */
 
 #import <UIKit/UIKit.h>
@@ -47,46 +52,26 @@
 - (BOOL)expandingTextViewShouldReturn:(UIExpandingTextView *)expandingTextView;
 @end
 
-@interface UIExpandingTextView : UIView <UITextViewDelegate> 
-{
-    UIExpandingTextViewInternal *internalTextView;
-    UIImageView *textViewBackgroundImage;
-    int minimumHeight;
-	int maximumHeight;
-    int maximumNumberOfLines;
-	int minimumNumberOfLines;
-	BOOL animateHeightChange;
-	NSObject <UIExpandingTextViewDelegate> *delegate;
-	NSString *text;
-	UIFont *font;
-	UIColor *textColor;
-	UITextAlignment textAlignment; 
-	NSRange selectedRange;
-	BOOL editable;
-	UIDataDetectorTypes dataDetectorTypes;
-	UIReturnKeyType returnKeyType;
-    BOOL forceSizeUpdate;
-    NSString *placeholder;
-    UILabel *placeholderLabel;
-}
-
-@property (nonatomic, retain) UITextView *internalTextView;
-
-@property int maximumNumberOfLines;
-@property int minimumNumberOfLines;
-@property BOOL animateHeightChange;
-
-@property (assign) NSObject<UIExpandingTextViewDelegate> *delegate;
-@property (nonatomic,assign) NSString *text;
-@property (nonatomic,assign) UIFont *font;
-@property (nonatomic,assign) UIColor *textColor;
+@interface UIExpandingTextView : UIView <UITextViewDelegate>
+@property (weak,nonatomic) NSObject<UIExpandingTextViewDelegate> *delegate;
+@property (nonatomic, strong) UITextView *internalTextView;
+@property (nonatomic,strong) NSString *text;
+@property (nonatomic,strong) UIFont *font;
+@property (nonatomic,strong) UIColor *textColor;
 @property (nonatomic) UITextAlignment textAlignment;
 @property (nonatomic) NSRange selectedRange;
 @property (nonatomic,getter=isEditable) BOOL editable;
 @property (nonatomic) UIDataDetectorTypes dataDetectorTypes __OSX_AVAILABLE_STARTING(__MAC_NA, __IPHONE_3_0);
 @property (nonatomic) UIReturnKeyType returnKeyType;
-@property (nonatomic, retain) UIImageView *textViewBackgroundImage;
+@property (nonatomic, strong) UIImageView *textViewBackgroundImage;
 @property (nonatomic,copy) NSString *placeholder;
+@property (strong,nonatomic) UILabel *placeholderLabel;
+@property int maximumNumberOfLines;
+@property int minimumNumberOfLines;
+@property int minimumHeight;
+@property int maximumHeight;
+@property BOOL animateHeightChange;
+@property BOOL forceSizeUpdate;
 - (BOOL)hasText;
 - (void)scrollRangeToVisible:(NSRange)range;
 - (void)clearText;

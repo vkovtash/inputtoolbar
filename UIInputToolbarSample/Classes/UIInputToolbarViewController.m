@@ -34,12 +34,6 @@
 
 @synthesize inputToolbar;
 
-- (void)dealloc
-{
-    [inputToolbar release];
-    [super dealloc];
-}
-
 #pragma mark - View lifecycle
 
 - (void)loadView
@@ -80,34 +74,16 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-{
-    return YES;
+- (void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                                          duration:(NSTimeInterval)duration{
+    if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+        self.inputToolbar.textView.maximumHeight = 195;
+    }
+    else{
+        self.inputToolbar.textView.maximumHeight = 101;
+    }
 }
 
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{	
-    CGRect screenFrame = [[UIScreen mainScreen] applicationFrame];
-    CGRect r = self.inputToolbar.frame;
-	if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation))
-    {
-        r.origin.y = screenFrame.size.height - self.inputToolbar.frame.size.height - kStatusBarHeight;
-        if (keyboardIsVisible) {
-            r.origin.y -= kKeyboardHeightPortrait;
-        }
-        [self.inputToolbar.textView setMaximumNumberOfLines:13]; 
-	}
-	else
-    {
-        r.origin.y = screenFrame.size.width - self.inputToolbar.frame.size.height - kStatusBarHeight;
-        if (keyboardIsVisible) {
-            r.origin.y -= kKeyboardHeightLandscape;
-        }
-        [self.inputToolbar.textView setMaximumNumberOfLines:7];
-        [self.inputToolbar.textView sizeToFit];
-    }
-    self.inputToolbar.frame = r;
-}
 
 #pragma mark -
 #pragma mark Notifications
@@ -146,9 +122,13 @@
     keyboardIsVisible = NO;
 }
 
--(void)inputButtonPressed:(NSString *)inputText
+-(void)inputButtonPressed:(UIInputToolbar *) toolbar
 {
     /* Called when toolbar button is pressed */
-    NSLog(@"Pressed button with text: '%@'", inputText);
+    NSLog(@"Pressed button with text: '%@'", toolbar.textView.text);
+}
+
+-(void) plusButtonPressed:(UIInputToolbar *) toolbar{
+    NSLog(@"Plus button pressed");
 }
 @end
