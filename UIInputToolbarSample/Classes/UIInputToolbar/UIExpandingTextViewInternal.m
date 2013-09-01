@@ -59,4 +59,14 @@
 	[super setContentInset:edgeInsets];
 }
 
+- (CGSize)contentSize {
+    // iOS 7 has wrong contentSize calculation,
+    // replace with intrinsicContentSize
+    CGSize size = [self intrinsicContentSize];
+    if (size.height == -1) {
+        size = [super contentSize];
+    }
+    return size;
+}
+
 @end
