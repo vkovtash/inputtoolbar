@@ -29,7 +29,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "UIExpandingTextViewInternal.h"
 
 @class UIExpandingTextView;
 
@@ -45,8 +44,8 @@
 - (BOOL)expandingTextView:(UIExpandingTextView *)expandingTextView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
 - (void)expandingTextViewDidChange:(UIExpandingTextView *)expandingTextView;
 
-- (void)expandingTextView:(UIExpandingTextView *)expandingTextView willChangeHeight:(float)height;
-- (void)expandingTextView:(UIExpandingTextView *)expandingTextView didChangeHeight:(float)height;
+- (void)expandingTextView:(UIExpandingTextView *)expandingTextView willChangeHeight:(CGFloat)height;
+- (void)expandingTextView:(UIExpandingTextView *)expandingTextView didChangeHeight:(CGFloat)height;
 
 - (void)expandingTextViewDidChangeSelection:(UIExpandingTextView *)expandingTextView;
 - (BOOL)expandingTextViewShouldReturn:(UIExpandingTextView *)expandingTextView;
@@ -66,10 +65,10 @@
 @property (nonatomic, strong) UIImageView *textViewBackgroundImage;
 @property (nonatomic,copy) NSString *placeholder;
 @property (strong,nonatomic) UILabel *placeholderLabel;
-@property int maximumNumberOfLines;
-@property int minimumNumberOfLines;
-@property int minimumHeight;
-@property int maximumHeight;
+@property NSInteger maximumNumberOfLines;
+@property NSInteger minimumNumberOfLines;
+@property CGFloat minimumHeight;
+@property CGFloat maximumHeight;
 @property BOOL animateHeightChange;
 @property BOOL forceSizeUpdate;
 - (BOOL)hasText;

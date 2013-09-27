@@ -57,60 +57,112 @@
 -(void)setupToolbar:(NSString *)buttonLabel
 {
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-    self.tintColor = [UIColor lightGrayColor];
     
-    /* Create custom send button*/
-    UIImage *buttonImage = [UIImage imageNamed:@"buttonbg.png"];
-    buttonImage = [buttonImage resizableImageWithCapInsets:UIEdgeInsetsMake(floorf(buttonImage.size.height/2),
-                                                                            floorf(buttonImage.size.height/2),
-                                                                            floorf(buttonImage.size.height/2),
-                                                                            floorf(buttonImage.size.height/2))];
-    
-    UIButton *button               = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.titleLabel.font         = [UIFont boldSystemFontOfSize:15.0f];
-    button.titleLabel.shadowOffset = CGSizeMake(0, -1);
-    button.titleEdgeInsets         = UIEdgeInsetsMake(0, 2, 0, 2);
-    
-    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    [button setBackgroundImage:buttonImage forState:UIControlStateDisabled];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setTitle:buttonLabel forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.7]
-                 forState:UIControlStateDisabled];
     [button addTarget:self action:@selector(inputButtonPressed) forControlEvents:UIControlEventTouchDown];
-    [button sizeToFit];
     
-    UIImage *plusButtonImage = [buttonImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
-    UIButton *buttonPlus               = [UIButton buttonWithType:UIButtonTypeCustom];
-    buttonPlus.titleLabel.font         = [UIFont boldSystemFontOfSize:30.0f];
-    buttonPlus.titleLabel.shadowOffset = CGSizeMake(0, -1);
-    buttonPlus.titleEdgeInsets         = UIEdgeInsetsMake(0, 2, 6, 2);
-    [buttonPlus setBackgroundImage:plusButtonImage forState:UIControlStateNormal];
-    [buttonPlus setBackgroundImage:plusButtonImage forState:UIControlStateDisabled];
+    UIButton *buttonPlus = [UIButton buttonWithType:UIButtonTypeCustom];
     [buttonPlus setTitle:@"+" forState:UIControlStateNormal];
-    [buttonPlus setTitleColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.7]
-                 forState:UIControlStateDisabled];
     [buttonPlus addTarget:self action:@selector(plusButtonPressed) forControlEvents:UIControlEventTouchDown];
-    buttonPlus.frame = CGRectMake(0, 0, button.frame.size.height, button.frame.size.height);
     buttonPlus.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    
+    /* Create UIExpandingTextView input */
+    self.textView = [[UIExpandingTextView alloc] initWithFrame:CGRectMake(0, 0, 200, 26)]; //System blue
+    self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    
+    CGFloat toolbarEdgeSeparatorWidth = 0;
+    
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")){
+        
+        UIImage *toolbarBackground = nil;
+        UIImage *buttonImage = nil;
+        toolbarBackground = [UIImage imageNamed:@"toolbarbg.png"];
+        toolbarBackground = [toolbarBackground stretchableImageWithLeftCapWidth:floorf(toolbarBackground.size.width/2)
+                                                                   topCapHeight:floorf(toolbarBackground.size.height/2)];
+        [self setBackgroundImage:toolbarBackground forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+        
+        buttonImage = [UIImage imageNamed:@"buttonbg.png"];
+        buttonImage = [buttonImage resizableImageWithCapInsets:UIEdgeInsetsMake(floorf(buttonImage.size.height/2),
+                                                                                floorf(buttonImage.size.height/2),
+                                                                                floorf(buttonImage.size.height/2),
+                                                                                floorf(buttonImage.size.height/2))];
+        
+        UIImage *plusButtonImage = [buttonImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+        
+        [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
+        [button setBackgroundImage:buttonImage forState:UIControlStateDisabled];
+        
+        [buttonPlus setBackgroundImage:plusButtonImage forState:UIControlStateNormal];
+        [buttonPlus setBackgroundImage:plusButtonImage forState:UIControlStateDisabled];
+        
+        /* Create custom send button*/
+        button.bounds = CGRectMake(0, 0, 58, 26);
+        button.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 0, 2);
+        button.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
+        button.titleLabel.shadowOffset = CGSizeMake(0, -1);
+        [button setTitleColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.7]
+                     forState:UIControlStateDisabled];
+        
+        buttonPlus.bounds = CGRectMake(0, 0, button.bounds.size.height, button.bounds.size.height);
+        buttonPlus.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 6, 2);
+        buttonPlus.titleLabel.font = [UIFont boldSystemFontOfSize:30.0f];
+        buttonPlus.titleLabel.shadowOffset = CGSizeMake(0, -1);
+        [buttonPlus setTitleColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.7]
+                         forState:UIControlStateDisabled];
+        
+        toolbarEdgeSeparatorWidth = -6;
+    }
+    
+    else{
+        UIColor *buttonNormalColor = [UIColor colorWithRed:0 green:0.48 blue:1 alpha:1];
+        UIColor *buttonHighlightedColor = [UIColor colorWithRed:0.6 green:0.8 blue:1 alpha:1];
+        UIColor *buttonDisabledColor = [UIColor lightGrayColor];
+        
+        button.bounds = CGRectMake(0, 0, 48, 26);
+        button.titleLabel.font = [UIFont boldSystemFontOfSize:17.0f];
+        [button setTitleColor:buttonNormalColor forState:UIControlStateNormal];
+        [button setTitleColor:buttonHighlightedColor forState:UIControlStateHighlighted];
+        [button setTitleColor:buttonDisabledColor forState:UIControlStateDisabled];
+        
+        buttonPlus.bounds = CGRectMake(0, 0, button.bounds.size.height, button.bounds.size.height);
+        buttonPlus.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 8, 0);
+        buttonPlus.titleLabel.font = [UIFont systemFontOfSize:40.0f];
+        [buttonPlus setTitleColor:buttonNormalColor forState:UIControlStateNormal];
+        [buttonPlus setTitleColor:buttonHighlightedColor forState:UIControlStateHighlighted];
+        [buttonPlus setTitleColor:buttonDisabledColor forState:UIControlStateDisabled];
+        
+        self.textView.font = [UIFont systemFontOfSize:16];
+        
+        toolbarEdgeSeparatorWidth = -12;
+    }
+    
 
     self.plusButtonItem = [[UIBarButtonItem alloc] initWithCustomView:buttonPlus];
     self.inputButton = [[UIBarButtonItem alloc] initWithCustomView:button];
     self.inputButton.customView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     /* Disable button initially */
     self.inputButton.enabled = NO;
-
-    /* Create UIExpandingTextView input */
-    self.textView = [[UIExpandingTextView alloc] initWithFrame:CGRectMake(45, 7, 200, 26)];
-    self.textView.internalTextView.scrollIndicatorInsets = UIEdgeInsetsMake(4.0f, 0.0f, 10.0f, 0.0f);
-    self.textView.delegate = self;
-    self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [self addSubview:self.textView];
     
     /* Right align the toolbar button */
     UIBarButtonItem *flexItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    flexItem.customView = self.textView;
     
-    NSArray *items = [NSArray arrayWithObjects: self.plusButtonItem,flexItem, self.inputButton, nil];
+    UIBarButtonItem *edgeSeparator = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    edgeSeparator.width = toolbarEdgeSeparatorWidth;
+    
+    NSArray *items = [NSArray arrayWithObjects: edgeSeparator, self.plusButtonItem, flexItem, self.inputButton, edgeSeparator, nil];
     [self setItems:items animated:NO];
+    
+    CGRect frame = self.textView.frame;
+    frame.origin.y = (self.bounds.size.height - self.textView.textViewBackgroundImage.bounds.size.height) / 2;
+    frame.size.width = self.inputButton.customView.frame.origin.x - self.plusButtonItem.customView.frame.origin.x - self.plusButtonItem.customView.frame.size.width - 12;
+    frame.origin.x = self.plusButtonItem.customView.frame.origin.x + self.plusButtonItem.customView.frame.size.width + 6;
+    self.textView.frame = frame;
+    
+    self.textView.delegate = self;
+    
+    self.animateHeightChanges = YES;
 }
 
 -(id)initWithFrame:(CGRect)frame
@@ -129,11 +181,8 @@
     return self;
 }
 
-- (void)drawRect:(CGRect)rect
-{
-    UIImage *backgroundImage = [UIImage imageNamed:@"toolbarbg.png"];
-    backgroundImage = [backgroundImage stretchableImageWithLeftCapWidth:floorf(backgroundImage.size.width/2) topCapHeight:floorf(backgroundImage.size.height/2)];
-    [backgroundImage drawInRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+- (void) layoutSubviews{
+    [super layoutSubviews];
     
     CGRect i = self.inputButton.customView.frame;
     i.origin.y = self.frame.size.height - i.size.height - 7;
@@ -142,6 +191,8 @@
     i = self.plusButtonItem.customView.frame;
     i.origin.y = self.frame.size.height - i.size.height - 7;
     self.plusButtonItem.customView.frame = i;
+    
+    self.textView.animateHeightChange = self.animateHeightChanges;
 }
 
 #pragma mark - UIExpandingTextView delegate

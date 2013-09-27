@@ -48,11 +48,10 @@
 - (void)inputToolbarViewDidChangeSelection:(UIInputToolbar *)inputToolbar;
 @end
 
-@interface UIInputToolbar : UIToolbar <UIExpandingTextViewDelegate> 
+@interface UIInputToolbar : UIToolbar <UIExpandingTextViewDelegate>
+@property (nonatomic) BOOL animateHeightChanges;
 @property (strong,nonatomic) UIExpandingTextView *textView;
 @property (strong,nonatomic) UIBarButtonItem *inputButton;
 @property (strong,nonatomic) UIBarButtonItem *plusButtonItem;
 @property (weak,nonatomic) NSObject<UIInputToolbarDelegate> *inputDelegate;
-
-- (void)drawRect:(CGRect)rect;
 @end

@@ -36,21 +36,17 @@
 
 #pragma mark - View lifecycle
 
-- (void)loadView
-{
-    [super loadView];
-
-    keyboardIsVisible = NO;
+- (void) viewDidLoad{
+    [super viewDidLoad];
     
-    /* Calculate screen size */
-    CGRect screenFrame = [[UIScreen mainScreen] applicationFrame];
-    self.view = [[UIView alloc] initWithFrame:screenFrame];
-    self.view.backgroundColor = [UIColor whiteColor];
+    keyboardIsVisible = NO;
     /* Create toolbar */
-    self.inputToolbar = [[UIInputToolbar alloc] initWithFrame:CGRectMake(0, screenFrame.size.height-kDefaultToolbarHeight, screenFrame.size.width, kDefaultToolbarHeight)];
+    self.inputToolbar = [[UIInputToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-kDefaultToolbarHeight, self.view.bounds.size.width, kDefaultToolbarHeight)];
+    self.inputToolbar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.inputToolbar];
     inputToolbar.inputDelegate = self;
     inputToolbar.textView.placeholder = @"Placeholder";
+    inputToolbar.textView.maximumNumberOfLines = 4;
 }
 
 - (void)viewDidUnload
@@ -77,10 +73,10 @@
 - (void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                           duration:(NSTimeInterval)duration{
     if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-        self.inputToolbar.textView.maximumHeight = 195;
+        self.inputToolbar.textView.maximumNumberOfLines = 4;
     }
     else{
-        self.inputToolbar.textView.maximumHeight = 101;
+        self.inputToolbar.textView.maximumNumberOfLines = 2;
     }
 }
 
