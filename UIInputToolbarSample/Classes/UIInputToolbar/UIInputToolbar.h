@@ -55,5 +55,5 @@
 @property (strong,nonatomic) UIBarButtonItem *plusButtonItem;
 @property (weak,nonatomic) NSObject<UIInputToolbarDelegate> *inputDelegate;
 
-- (id)initWithFrame:(CGRect)frame withLabel:(NSString *)label;
+- (id)initWithFrame:(CGRect)frame label:(NSString *)label;
 @end

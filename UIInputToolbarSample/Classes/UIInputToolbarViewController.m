@@ -41,7 +41,8 @@
     
     keyboardIsVisible = NO;
     /* Create toolbar */
-    self.inputToolbar = [[UIInputToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-kDefaultToolbarHeight, self.view.bounds.size.width, kDefaultToolbarHeight)];
+    self.inputToolbar = [[UIInputToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - kDefaultToolbarHeight, self.view.bounds.size.width, kDefaultToolbarHeight)
+                                                        label:@"Send"];
     self.inputToolbar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.inputToolbar];
     inputToolbar.inputDelegate = self;

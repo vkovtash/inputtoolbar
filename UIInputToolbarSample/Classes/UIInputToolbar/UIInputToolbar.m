@@ -176,7 +176,7 @@
     self.animateHeightChanges = YES;
 }
 
--(id)initWithFrame:(CGRect)frame withLabel:(NSString *)label
+-(id)initWithFrame:(CGRect)frame label:(NSString *)label
 {
     if ((self = [super initWithFrame:frame])) {
         [self setupToolbar:label];
