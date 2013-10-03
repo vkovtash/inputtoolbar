@@ -103,7 +103,8 @@
         button.titleLabel.shadowOffset = CGSizeMake(0, -1);
         [button setTitleColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.7]
                      forState:UIControlStateDisabled];
-        
+        [button sizeToFit];
+
         buttonPlus.bounds = CGRectMake(0, 0, button.bounds.size.height, button.bounds.size.height);
         buttonPlus.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 6, 2);
         buttonPlus.titleLabel.font = [UIFont boldSystemFontOfSize:30.0f];
@@ -124,6 +125,7 @@
         [button setTitleColor:buttonNormalColor forState:UIControlStateNormal];
         [button setTitleColor:buttonHighlightedColor forState:UIControlStateHighlighted];
         [button setTitleColor:buttonDisabledColor forState:UIControlStateDisabled];
+        [button sizeToFit];
         
         buttonPlus.bounds = CGRectMake(0, 0, button.bounds.size.height, button.bounds.size.height);
         buttonPlus.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 8, 0);
@@ -163,6 +165,14 @@
     self.textView.delegate = self;
     
     self.animateHeightChanges = YES;
+}
+
+-(id)initWithFrame:(CGRect)frame withLabel:(NSString *)label
+{
+    if ((self = [super initWithFrame:frame])) {
+        [self setupToolbar:label];
+    }
+    return self;
 }
 
 -(id)initWithFrame:(CGRect)frame
