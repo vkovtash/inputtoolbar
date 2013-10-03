@@ -30,6 +30,8 @@
 
 #import "UIInputToolbar.h"
 
+#define kDefaultButtonHeight 26
+
 @interface UIInputToolbar()
 @property (nonatomic) CGFloat touchBeginY;
 @end
@@ -97,13 +99,16 @@
         [buttonPlus setBackgroundImage:plusButtonImage forState:UIControlStateDisabled];
         
         /* Create custom send button*/
-        button.bounds = CGRectMake(0, 0, 58, 26);
         button.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 0, 2);
         button.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
         button.titleLabel.shadowOffset = CGSizeMake(0, -1);
         [button setTitleColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.7]
                      forState:UIControlStateDisabled];
         [button sizeToFit];
+        
+        CGRect bounds = button.bounds;
+        bounds.size.height = kDefaultButtonHeight;
+        button.bounds = bounds;
 
         buttonPlus.bounds = CGRectMake(0, 0, button.bounds.size.height, button.bounds.size.height);
         buttonPlus.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 6, 2);
@@ -120,12 +125,16 @@
         UIColor *buttonHighlightedColor = [UIColor colorWithRed:0.6 green:0.8 blue:1 alpha:1];
         UIColor *buttonDisabledColor = [UIColor lightGrayColor];
         
-        button.bounds = CGRectMake(0, 0, 48, 26);
+        /* Create custom send button*/
         button.titleLabel.font = [UIFont boldSystemFontOfSize:17.0f];
         [button setTitleColor:buttonNormalColor forState:UIControlStateNormal];
         [button setTitleColor:buttonHighlightedColor forState:UIControlStateHighlighted];
         [button setTitleColor:buttonDisabledColor forState:UIControlStateDisabled];
         [button sizeToFit];
+        
+        CGRect bounds = button.bounds;
+        bounds.size.height = kDefaultButtonHeight;
+        button.bounds = bounds;
         
         buttonPlus.bounds = CGRectMake(0, 0, button.bounds.size.height, button.bounds.size.height);
         buttonPlus.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 8, 0);
