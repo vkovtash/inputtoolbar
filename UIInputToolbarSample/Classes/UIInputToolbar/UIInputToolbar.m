@@ -82,7 +82,9 @@
         toolbarBackground = [UIImage imageNamed:@"toolbarbg.png"];
         toolbarBackground = [toolbarBackground stretchableImageWithLeftCapWidth:floorf(toolbarBackground.size.width/2)
                                                                    topCapHeight:floorf(toolbarBackground.size.height/2)];
-        [self setBackgroundImage:toolbarBackground forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+        [self setBackgroundImage:toolbarBackground
+              forToolbarPosition:UIToolbarPositionBottom
+                      barMetrics:UIBarMetricsDefault];
         
         buttonImage = [UIImage imageNamed:@"buttonbg.png"];
         buttonImage = [buttonImage resizableImageWithCapInsets:UIEdgeInsetsMake(floorf(buttonImage.size.height/2),
