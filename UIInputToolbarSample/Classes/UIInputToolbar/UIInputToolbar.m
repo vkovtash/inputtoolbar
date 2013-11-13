@@ -218,7 +218,7 @@
 
 #pragma mark - UIExpandingTextView delegate
 
--(void)expandingTextView:(UIExpandingTextView *)expandingTextView willChangeHeight:(float)height
+-(void)expandingTextView:(UIExpandingTextView *)expandingTextView willChangeHeight:(CGFloat)height
 {
     /* Adjust the height of the toolbar when the input component expands */
     float diff = (textView.frame.size.height - height);

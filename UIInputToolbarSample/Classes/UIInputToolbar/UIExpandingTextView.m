@@ -178,11 +178,11 @@
     self.placeholderLabel.text = placeholders;
 }
 
-- (int) maximumNumberOfLines{
+- (NSInteger) maximumNumberOfLines{
     return _maximumNumberOfLines;
 }
      
--(void)setMaximumNumberOfLines:(int)n
+-(void)setMaximumNumberOfLines:(NSInteger)n
 {
     BOOL didChange            = NO;
     NSString *saveText        = self.internalTextView.text;
@@ -206,11 +206,11 @@
     }
 }
 
--(int) minimumNumberOfLines{
+-(NSInteger) minimumNumberOfLines{
     return _minimumNumberOfLines;
 }
 
--(void)setMinimumNumberOfLines:(int)m
+-(void)setMinimumNumberOfLines:(NSInteger)m
 {
     NSString *saveText        = self.internalTextView.text;
     NSString *newText         = @"-";
