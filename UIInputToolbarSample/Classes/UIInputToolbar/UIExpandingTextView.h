@@ -30,6 +30,10 @@
 
 #import <UIKit/UIKit.h>
 
+@interface UITextView (readwriteInputView)
+@property (readwrite, retain) UIView *inputView;
+@end
+
 @class UIExpandingTextView;
 
 @protocol UIExpandingTextViewDelegate
@@ -71,6 +75,8 @@
 @property CGFloat maximumHeight;
 @property BOOL animateHeightChange;
 @property BOOL forceSizeUpdate;
+@property (readwrite, nonatomic) UIView *inputView;
+
 - (BOOL)hasText;
 - (void)scrollRangeToVisible:(NSRange)range;
 - (void)clearText;

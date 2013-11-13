@@ -349,6 +349,18 @@
 	}
 }
 
+- (void) reloadInputViews {
+    [self.internalTextView reloadInputViews];
+}
+
+- (void) setInputView:(UIView *)inputView {
+    [self.internalTextView setInputView:inputView];
+}
+
+- (UIView *) inputView {
+    return self.internalTextView.inputView;
+}
+
 - (BOOL) becomeFirstResponder{
     return [self.internalTextView becomeFirstResponder];
 }
