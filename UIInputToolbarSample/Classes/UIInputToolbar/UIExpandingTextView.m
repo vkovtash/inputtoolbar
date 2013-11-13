@@ -418,7 +418,7 @@
 	self.internalTextView.textAlignment = aligment;
 }
 
--(UITextAlignment)textAlignment
+-(VKTextAligment)textAlignment
 {
 	return self.internalTextView.textAlignment;
 }
