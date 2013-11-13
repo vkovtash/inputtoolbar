@@ -32,10 +32,10 @@
 
 #define kTextInsetX 4
 
-#ifdef NSTextAlignmentCenter // iOS6 and later
-#define VKTextAligment NSTextAlignment
+#ifdef __IPHONE_6_0 // iOS6 and later
+#define VKTextAlignment NSTextAlignment
 #else // older versions
-#define VKTextAligment UITextAlignment
+#define VKTextAlignment UITextAlignment
 #endif
 
 @interface UIExpandingTextView()
@@ -413,12 +413,12 @@
 	return self.internalTextView.textColor;
 }
 
--(void)setTextAlignment:(VKTextAligment)aligment
+-(void)setTextAlignment:(VKTextAlignment)aligment
 {
 	self.internalTextView.textAlignment = aligment;
 }
 
--(VKTextAligment)textAlignment
+-(VKTextAlignment)textAlignment
 {
 	return self.internalTextView.textAlignment;
 }

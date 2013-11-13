@@ -61,7 +61,11 @@
 @property (nonatomic,strong) NSString *text;
 @property (nonatomic,strong) UIFont *font;
 @property (nonatomic,strong) UIColor *textColor;
+#ifdef __IPHONE_6_0
+@property (nonatomic) NSTextAlignment textAlignment;
+#else
 @property (nonatomic) UITextAlignment textAlignment;
+#endif
 @property (nonatomic) NSRange selectedRange;
 @property (nonatomic,getter=isEditable) BOOL editable;
 @property (nonatomic) UIDataDetectorTypes dataDetectorTypes __OSX_AVAILABLE_STARTING(__MAC_NA, __IPHONE_3_0);
