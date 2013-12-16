@@ -30,6 +30,9 @@
 #define kKeyboardHeightPortrait 216
 #define kKeyboardHeightLandscape 140
 
+@interface UIInputToolbarViewController()
+@end
+
 @implementation UIInputToolbarViewController
 
 @synthesize inputToolbar;
@@ -38,6 +41,13 @@
 
 - (void) viewDidLoad{
     [super viewDidLoad];
+    
+    UISwitch *plusSwitch = [[UISwitch alloc] init];
+    plusSwitch.center = CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height*0.25);
+    plusSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+    plusSwitch.on = YES;
+    [plusSwitch addTarget:self action:@selector(plusSwitchPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:plusSwitch];
     
     keyboardIsVisible = NO;
     /* Create toolbar */
@@ -81,6 +91,9 @@
     }
 }
 
+- (void) plusSwitchPressed:(UISwitch *) plusSwitch {
+    self.inputToolbar.isPlusButtonVisible = plusSwitch.on;
+}
 
 #pragma mark -
 #pragma mark Notifications

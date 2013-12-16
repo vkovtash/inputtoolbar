@@ -30,9 +30,12 @@
 
 #import "UIInputToolbar.h"
 
-#define kDefaultButtonHeight 26
+static CGFloat kDefaultButtonHeight = 26;
+static CGFloat kInputFieltMargin = 6;
 
 @interface UIInputToolbar()
+@property (strong, nonatomic) UIBarButtonItem *edgeSeparator;
+@property (strong, nonatomic) UIBarButtonItem *textInputItem;
 @property (nonatomic) CGFloat touchBeginY;
 @end
 
@@ -59,6 +62,7 @@
 -(void)setupToolbar:(NSString *)buttonLabel
 {
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+    _isPlusButtonVisible = YES;
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setTitle:buttonLabel forState:UIControlStateNormal];
@@ -68,10 +72,6 @@
     [buttonPlus setTitle:@"+" forState:UIControlStateNormal];
     [buttonPlus addTarget:self action:@selector(plusButtonPressed) forControlEvents:UIControlEventTouchDown];
     buttonPlus.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-    
-    /* Create UIExpandingTextView input */
-    self.textView = [[UIExpandingTextView alloc] initWithFrame:CGRectMake(0, 0, 200, 26)]; //System blue
-    self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     CGFloat toolbarEdgeSeparatorWidth = 0;
     
@@ -145,8 +145,6 @@
         [buttonPlus setTitleColor:buttonHighlightedColor forState:UIControlStateHighlighted];
         [buttonPlus setTitleColor:buttonDisabledColor forState:UIControlStateDisabled];
         
-        self.textView.font = [UIFont systemFontOfSize:16];
-        
         toolbarEdgeSeparatorWidth = -12;
     }
     
@@ -157,24 +155,20 @@
     /* Disable button initially */
     self.inputButton.enabled = NO;
     
-    /* Right align the toolbar button */
-    UIBarButtonItem *flexItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    flexItem.customView = self.textView;
+    /* Create UIExpandingTextView input */
+    self.textView = [[UIExpandingTextView alloc] initWithFrame:self.bounds];
+    self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.textView.frame = CGRectOffset(self.textView.frame, 0, (self.bounds.size.height - self.textView.bounds.size.height) / 2);
     
-    UIBarButtonItem *edgeSeparator = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    edgeSeparator.width = toolbarEdgeSeparatorWidth;
+    _textInputItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    _textInputItem.customView = self.textView;
     
-    NSArray *items = [NSArray arrayWithObjects: edgeSeparator, self.plusButtonItem, flexItem, self.inputButton, edgeSeparator, nil];
-    [self setItems:items animated:NO];
+    _edgeSeparator = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    _edgeSeparator.width = toolbarEdgeSeparatorWidth;
     
-    CGRect frame = self.textView.frame;
-    frame.origin.y = (self.bounds.size.height - self.textView.textViewBackgroundImage.bounds.size.height) / 2;
-    frame.size.width = self.inputButton.customView.frame.origin.x - self.plusButtonItem.customView.frame.origin.x - self.plusButtonItem.customView.frame.size.width - 12;
-    frame.origin.x = self.plusButtonItem.customView.frame.origin.x + self.plusButtonItem.customView.frame.size.width + 6;
-    self.textView.frame = frame;
+    [self adjustVisibleItems];
     
     self.textView.delegate = self;
-    
     self.animateHeightChanges = YES;
 }
 
@@ -202,6 +196,43 @@
     return self;
 }
 
+- (void) adjustVisibleItems {
+    
+    if (_isPlusButtonVisible) {
+        [self setItems:@[self.edgeSeparator, self.plusButtonItem, self.textInputItem, self.inputButton, self.edgeSeparator]
+              animated:NO];
+    }
+    else {
+        [self setItems:@[self.edgeSeparator, self.textInputItem, self.inputButton, self.edgeSeparator]
+              animated:NO];
+    }
+    [self layoutExpandingTextView];
+}
+
+- (void) layoutExpandingTextView {
+    CGRect frame = self.textView.frame;
+    frame.size.width = self.bounds.size.width;
+    frame.origin.x = 0;
+    
+    BOOL calculatePosition = YES;
+    
+    for (UIBarButtonItem *item in self.items) {
+        if ([item.customView isKindOfClass:[UIExpandingTextView class]]) {
+            calculatePosition = NO;
+        }
+        else if (item.customView){
+            if (calculatePosition) {
+                frame.origin.x += item.width ? item.width : item.customView.frame.size.width;
+            }
+            frame.size.width -= item.width + item.customView.frame.size.width;
+        }
+    }
+    
+    frame.size.width -= kInputFieltMargin * 2;
+    frame.origin.x += kInputFieltMargin;
+    self.textView.frame = frame;
+}
+
 - (void) layoutSubviews{
     [super layoutSubviews];
     
@@ -214,6 +245,13 @@
     self.plusButtonItem.customView.frame = i;
     
     self.textView.animateHeightChange = self.animateHeightChanges;
+}
+
+- (void) setIsPlusButtonVisible:(BOOL)isPlusButtonVisible {
+    if (_isPlusButtonVisible != isPlusButtonVisible) {
+        _isPlusButtonVisible = isPlusButtonVisible;
+        [self adjustVisibleItems];
+    }
 }
 
 #pragma mark - UIExpandingTextView delegate
