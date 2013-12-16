@@ -31,7 +31,7 @@
 #import "UIInputToolbar.h"
 
 static CGFloat kDefaultButtonHeight = 26;
-static CGFloat kInputFieltMargin = 6;
+static CGFloat kInputFieltMargin = 8;
 
 @interface UIInputToolbar()
 @property (strong, nonatomic) UIBarButtonItem *edgeSeparator;

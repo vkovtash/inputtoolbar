@@ -132,7 +132,7 @@
 		[self setMinimumNumberOfLines:1];
 		[self setMaximumNumberOfLines:5];
         
-        self.internalTextView.text = @"";
+        [self clearText];
         
         [self sizeToFit];
     }
