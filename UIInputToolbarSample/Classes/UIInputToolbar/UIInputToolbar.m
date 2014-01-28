@@ -32,6 +32,8 @@
 
 static CGFloat kDefaultButtonHeight = 26;
 static CGFloat kInputFieltMargin = 8;
+static NSString* const kInputButtonTitleSend = @"Send";
+static NSString* const kInputButtonTitleSay = @"Say";
 
 @interface UIInputToolbar()
 @property (strong, nonatomic) UIBarButtonItem *edgeSeparator;
@@ -47,10 +49,21 @@ static CGFloat kInputFieltMargin = 8;
 
 -(void)inputButtonPressed
 {
-    if ([_inputDelegate respondsToSelector:@selector(inputButtonPressed:)])
-    {
-        [_inputDelegate inputButtonPressed:self];
-    }
+	if ([textView.text length] > 0)
+	{
+		if ([_inputDelegate respondsToSelector:@selector(inputButtonPressed:)])
+		{
+			[_inputDelegate inputButtonPressed:self];
+		}
+	}
+	else
+	{
+		if ([_inputDelegate respondsToSelector:@selector(sayButtonPressed:)])
+		{
+			[_inputDelegate sayButtonPressed:self];
+		}
+
+	}
 }
 
 - (void)plusButtonPressed{
@@ -150,11 +163,14 @@ static CGFloat kInputFieltMargin = 8;
     
 
     self.plusButtonItem = [[UIBarButtonItem alloc] initWithCustomView:buttonPlus];
-    self.inputButton = [[UIBarButtonItem alloc] initWithCustomView:button];
-    self.inputButton.customView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-    /* Disable button initially */
-    self.inputButton.enabled = NO;
-    
+    self.inputButton = [[UIBarButtonItem alloc] initWithTitle:kInputButtonTitleSay
+														style:UIBarButtonItemStyleBordered
+													   target:self
+													   action:@selector(inputButtonPressed)];
+    self.inputButton.possibleTitles = [NSSet setWithObjects:kInputButtonTitleSend,
+									   kInputButtonTitleSay, nil];
+    [self.inputButton setTitle:kInputButtonTitleSay];
+
     /* Create UIExpandingTextView input */
     self.textView = [[UIExpandingTextView alloc] initWithFrame:self.bounds];
     self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -183,7 +199,7 @@ static CGFloat kInputFieltMargin = 8;
 -(id)initWithFrame:(CGRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
-        [self setupToolbar:@"Send"];
+        [self setupToolbar:kInputButtonTitleSay];
     }
     return self;
 }
@@ -191,7 +207,7 @@ static CGFloat kInputFieltMargin = 8;
 -(id)init
 {
     if ((self = [super init])) {
-        [self setupToolbar:@"Send"];
+        [self setupToolbar:kInputButtonTitleSay];
     }
     return self;
 }
@@ -279,10 +295,10 @@ static CGFloat kInputFieltMargin = 8;
 {
     /* Enable/Disable the button */
     if ([expandingTextView.text length] > 0)
-        self.inputButton.enabled = YES;
+        self.inputButton.title = kInputButtonTitleSend;
     else
-        self.inputButton.enabled = NO;
-    
+        self.inputButton.title = kInputButtonTitleSay;
+
     if ([self.inputDelegate respondsToSelector:@selector(inputToolbarViewDidChange:)]) {
         [self.inputDelegate inputToolbarViewDidChange:self];
     }
