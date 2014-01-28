@@ -39,6 +39,7 @@ static NSString* const kInputButtonTitleSay = @"Say";
 @property (strong, nonatomic) UIBarButtonItem *edgeSeparator;
 @property (strong, nonatomic) UIBarButtonItem *textInputItem;
 @property (nonatomic) CGFloat touchBeginY;
+@property (strong, nonatomic) UIButton *rightButton;
 @end
 
 @implementation UIInputToolbar
@@ -72,14 +73,21 @@ static NSString* const kInputButtonTitleSay = @"Say";
     }
 }
 
--(void)setupToolbar:(NSString *)buttonLabel
+-(void)setupToolbar:(NSString *)buttonLabel possibleLabels:(NSSet *) possibleLabels
 {
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
     _isPlusButtonVisible = YES;
     
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setTitle:buttonLabel forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(inputButtonPressed) forControlEvents:UIControlEventTouchDown];
+    self.rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.rightButton setTitle:buttonLabel forState:UIControlStateNormal];
+    [self.rightButton addTarget:self action:@selector(inputButtonPressed) forControlEvents:UIControlEventTouchDown];
+    
+    NSString *maxRightButtonTitle = nil;
+    for(NSString *possibleLabel in possibleLabels) {
+        if (possibleLabel.length > maxRightButtonTitle.length) {
+            maxRightButtonTitle = possibleLabel;
+        }
+    }
     
     UIButton *buttonPlus = [UIButton buttonWithType:UIButtonTypeCustom];
     [buttonPlus setTitle:@"+" forState:UIControlStateNormal];
@@ -107,25 +115,29 @@ static NSString* const kInputButtonTitleSay = @"Say";
         
         UIImage *plusButtonImage = [buttonImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
         
-        [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
-        [button setBackgroundImage:buttonImage forState:UIControlStateDisabled];
+        [self.rightButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+        [self.rightButton setBackgroundImage:buttonImage forState:UIControlStateDisabled];
         
         [buttonPlus setBackgroundImage:plusButtonImage forState:UIControlStateNormal];
         [buttonPlus setBackgroundImage:plusButtonImage forState:UIControlStateDisabled];
         
         /* Create custom send button*/
-        button.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 0, 2);
-        button.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
-        button.titleLabel.shadowOffset = CGSizeMake(0, -1);
-        [button setTitleColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.7]
-                     forState:UIControlStateDisabled];
-        [button sizeToFit];
         
-        CGRect bounds = button.bounds;
+        
+        self.rightButton.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 0, 2);
+        self.rightButton.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
+        self.rightButton.titleLabel.shadowOffset = CGSizeMake(0, -1);
+        [self.rightButton setTitleColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.7]
+                     forState:UIControlStateDisabled];
+        [self.rightButton setTitle:maxRightButtonTitle forState:UIControlStateNormal];
+        [self.rightButton sizeToFit];
+        
+        CGRect bounds = self.rightButton.bounds;
         bounds.size.height = kDefaultButtonHeight;
-        button.bounds = bounds;
+        self.rightButton.bounds = bounds;
+        [self.rightButton setTitle:buttonLabel forState:UIControlStateNormal];
 
-        buttonPlus.bounds = CGRectMake(0, 0, button.bounds.size.height, button.bounds.size.height);
+        buttonPlus.bounds = CGRectMake(0, 0, self.rightButton.bounds.size.height, self.rightButton.bounds.size.height);
         buttonPlus.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 6, 2);
         buttonPlus.titleLabel.font = [UIFont boldSystemFontOfSize:30.0f];
         buttonPlus.titleLabel.shadowOffset = CGSizeMake(0, -1);
@@ -141,17 +153,19 @@ static NSString* const kInputButtonTitleSay = @"Say";
         UIColor *buttonDisabledColor = [UIColor lightGrayColor];
         
         /* Create custom send button*/
-        button.titleLabel.font = [UIFont boldSystemFontOfSize:17.0f];
-        [button setTitleColor:buttonNormalColor forState:UIControlStateNormal];
-        [button setTitleColor:buttonHighlightedColor forState:UIControlStateHighlighted];
-        [button setTitleColor:buttonDisabledColor forState:UIControlStateDisabled];
-        [button sizeToFit];
+        self.rightButton.titleLabel.font = [UIFont boldSystemFontOfSize:17.0f];
+        [self.rightButton setTitleColor:buttonNormalColor forState:UIControlStateNormal];
+        [self.rightButton setTitleColor:buttonHighlightedColor forState:UIControlStateHighlighted];
+        [self.rightButton setTitleColor:buttonDisabledColor forState:UIControlStateDisabled];
+        [self.rightButton setTitle:maxRightButtonTitle forState:UIControlStateNormal];
+        [self.rightButton sizeToFit];
         
-        CGRect bounds = button.bounds;
+        CGRect bounds = self.rightButton.bounds;
         bounds.size.height = kDefaultButtonHeight;
-        button.bounds = bounds;
+        self.rightButton.bounds = bounds;
+        [self.rightButton setTitle:buttonLabel forState:UIControlStateNormal];
         
-        buttonPlus.bounds = CGRectMake(0, 0, button.bounds.size.height, button.bounds.size.height);
+        buttonPlus.bounds = CGRectMake(0, 0, self.rightButton.bounds.size.height, self.rightButton.bounds.size.height);
         buttonPlus.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 8, 0);
         buttonPlus.titleLabel.font = [UIFont systemFontOfSize:40.0f];
         [buttonPlus setTitleColor:buttonNormalColor forState:UIControlStateNormal];
@@ -161,15 +175,9 @@ static NSString* const kInputButtonTitleSay = @"Say";
         toolbarEdgeSeparatorWidth = -12;
     }
     
-
     self.plusButtonItem = [[UIBarButtonItem alloc] initWithCustomView:buttonPlus];
-    self.inputButton = [[UIBarButtonItem alloc] initWithTitle:kInputButtonTitleSay
-														style:UIBarButtonItemStyleBordered
-													   target:self
-													   action:@selector(inputButtonPressed)];
-    self.inputButton.possibleTitles = [NSSet setWithObjects:kInputButtonTitleSend,
-									   kInputButtonTitleSay, nil];
-    [self.inputButton setTitle:kInputButtonTitleSay];
+    self.inputButton = [[UIBarButtonItem alloc] initWithCustomView:self.rightButton];
+    self.inputButton.customView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
 
     /* Create UIExpandingTextView input */
     self.textView = [[UIExpandingTextView alloc] initWithFrame:self.bounds];
@@ -191,7 +199,7 @@ static NSString* const kInputButtonTitleSay = @"Say";
 -(id)initWithFrame:(CGRect)frame label:(NSString *)label
 {
     if ((self = [super initWithFrame:frame])) {
-        [self setupToolbar:label];
+        [self setupToolbar:label possibleLabels:[NSSet setWithObject:label]];
     }
     return self;
 }
@@ -199,7 +207,7 @@ static NSString* const kInputButtonTitleSay = @"Say";
 -(id)initWithFrame:(CGRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
-        [self setupToolbar:kInputButtonTitleSay];
+        [self setupToolbar:kInputButtonTitleSay possibleLabels:[NSSet setWithObjects:kInputButtonTitleSay, kInputButtonTitleSend, nil]];
     }
     return self;
 }
@@ -207,7 +215,7 @@ static NSString* const kInputButtonTitleSay = @"Say";
 -(id)init
 {
     if ((self = [super init])) {
-        [self setupToolbar:kInputButtonTitleSay];
+        [self setupToolbar:kInputButtonTitleSay possibleLabels:[NSSet setWithObjects:kInputButtonTitleSay, kInputButtonTitleSend, nil]];
     }
     return self;
 }
@@ -294,10 +302,12 @@ static NSString* const kInputButtonTitleSay = @"Say";
 -(void)expandingTextViewDidChange:(UIExpandingTextView *)expandingTextView
 {
     /* Enable/Disable the button */
-    if ([expandingTextView.text length] > 0)
-        self.inputButton.title = kInputButtonTitleSend;
-    else
-        self.inputButton.title = kInputButtonTitleSay;
+    if ([expandingTextView.text length] > 0){
+        [self.rightButton setTitle:kInputButtonTitleSend forState:UIControlStateNormal];
+    }
+    else {
+        [self.rightButton setTitle:kInputButtonTitleSay forState:UIControlStateNormal];
+    }
 
     if ([self.inputDelegate respondsToSelector:@selector(inputToolbarViewDidChange:)]) {
         [self.inputDelegate inputToolbarViewDidChange:self];
