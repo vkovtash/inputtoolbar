@@ -31,6 +31,8 @@
 #define kKeyboardHeightLandscape 140
 
 @interface UIInputToolbarViewController()
+@property (strong, nonatomic) UIButton *leftInputButton;
+@property (strong, nonatomic) UIButton *rightInputButton;
 @end
 
 @implementation UIInputToolbarViewController
@@ -43,16 +45,44 @@
     [super viewDidLoad];
     
     UISwitch *plusSwitch = [[UISwitch alloc] init];
-    plusSwitch.center = CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height*0.25);
+    plusSwitch.center = CGPointMake(self.view.bounds.size.width/2, 44);
     plusSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
     plusSwitch.on = YES;
     [plusSwitch addTarget:self action:@selector(plusSwitchPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:plusSwitch];
     
+    UISwitch *leftButtonSwitch = [[UISwitch alloc] init];
+    leftButtonSwitch.center = CGPointMake(self.view.bounds.size.width/2, 88);
+    leftButtonSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+    [leftButtonSwitch addTarget:self action:@selector(leftButtonSwitchPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:leftButtonSwitch];
+    
+    UISwitch *rightButtonSwith = [[UISwitch alloc] init];
+    rightButtonSwith.center = CGPointMake(self.view.bounds.size.width/2, 132);
+    rightButtonSwith.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+    [rightButtonSwith addTarget:self action:@selector(rightButtonSwitchPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:rightButtonSwith];
+    
     keyboardIsVisible = NO;
+    
+    /*Toolbar right View*/
+    self.rightInputButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.rightInputButton.frame = CGRectMake(0, 0, 44, 38);
+    self.rightInputButton.backgroundColor = [UIColor redColor];
+    [self.rightInputButton addTarget:self action:@selector(rigthInputButtonPressed)
+                    forControlEvents:UIControlEventTouchUpInside];
+    
+    /*Toolbar left View*/
+    self.leftInputButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.leftInputButton.frame = CGRectMake(0, 0, 44, 38);
+    self.leftInputButton.backgroundColor = [UIColor greenColor];
+    [self.leftInputButton addTarget:self action:@selector(leftInputButtonPressed)
+                    forControlEvents:UIControlEventTouchUpInside];
+    
     /* Create toolbar */
     self.inputToolbar = [[UIInputToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - kDefaultToolbarHeight, self.view.bounds.size.width, kDefaultToolbarHeight)
                                                         label:@"Send"];
+    
     self.inputToolbar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.inputToolbar];
     inputToolbar.inputDelegate = self;
@@ -60,8 +90,7 @@
     inputToolbar.textView.maximumNumberOfLines = 4;
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
 }
 
@@ -93,6 +122,33 @@
 
 - (void) plusSwitchPressed:(UISwitch *) plusSwitch {
     self.inputToolbar.isPlusButtonVisible = plusSwitch.on;
+}
+
+- (void) leftButtonSwitchPressed:(UISwitch *) leftButtonSwitch {
+    if (leftButtonSwitch.on) {
+        inputToolbar.textView.leftView = self.leftInputButton;
+        inputToolbar.textView.leftViewVerticalAlign = UIExpandingTextViewVerticalAlignTop;
+    }
+    else {
+        inputToolbar.textView.leftView = nil;
+    }
+}
+
+- (void) rightButtonSwitchPressed:(UISwitch *) rightButtonSwitch {
+    if (rightButtonSwitch.on) {
+        inputToolbar.textView.rightView = self.rightInputButton;
+    }
+    else {
+        inputToolbar.textView.rightView = nil;
+    }
+}
+
+- (void) rigthInputButtonPressed {
+    NSLog(@"rigthInputButtonPressed");
+}
+
+- (void) leftInputButtonPressed {
+    NSLog(@"leftInputButtonPressed");
 }
 
 #pragma mark -

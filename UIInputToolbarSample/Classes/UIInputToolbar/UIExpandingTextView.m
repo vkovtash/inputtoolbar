@@ -133,10 +133,122 @@
 		[self setMaximumNumberOfLines:5];
         
         [self clearText];
-        
         [self sizeToFit];
     }
     return self;
+}
+
+- (void) setRightView:(UIView *)rightView {
+    if (_rightView != rightView) {
+        //restore text insets
+        _internalTextView.textContainerInset = UIEdgeInsetsMake(_internalTextView.textContainerInset.top,
+                                                                _internalTextView.textContainerInset.left,
+                                                                _internalTextView.textContainerInset.bottom,
+                                                                _internalTextView.textContainerInset.right - _rightView.frame.size.width);
+        //replace view
+        [_rightView removeFromSuperview];
+        _rightView = rightView;
+        [self addSubview:_rightView];
+        [self alignRightView];
+        
+        //set new text insets
+        _internalTextView.textContainerInset = UIEdgeInsetsMake(_internalTextView.textContainerInset.top,
+                                                                _internalTextView.textContainerInset.left,
+                                                                _internalTextView.textContainerInset.bottom,
+                                                                _internalTextView.textContainerInset.right + _rightView.frame.size.width);
+        [self textViewDidChange:_internalTextView];
+    }
+}
+
+- (void) setLeftView:(UIView *)leftView {
+    if (_leftView != leftView) {
+        //restore text insets
+        _internalTextView.textContainerInset = UIEdgeInsetsMake(_internalTextView.textContainerInset.top,
+                                                                _internalTextView.textContainerInset.left - _leftView.frame.size.width,
+                                                                _internalTextView.textContainerInset.bottom,
+                                                                _internalTextView.textContainerInset.right);
+        _placeholderLabel.center = CGPointMake(_placeholderLabel.center.x - _leftView.frame.size.width, _placeholderLabel.center.y);
+        
+        //replace view
+        [_leftView removeFromSuperview];
+        _leftView = leftView;
+        [self addSubview:_leftView];
+        [self alignLeftView];
+        
+        //set new text insets
+        _internalTextView.textContainerInset = UIEdgeInsetsMake(_internalTextView.textContainerInset.top,
+                                                                _internalTextView.textContainerInset.left + _leftView.frame.size.width,
+                                                                _internalTextView.textContainerInset.bottom,
+                                                                _internalTextView.textContainerInset.right);
+        _placeholderLabel.center = CGPointMake(_placeholderLabel.center.x + _leftView.frame.size.width, _placeholderLabel.center.y);
+        [self textViewDidChange:_internalTextView];
+    }
+}
+
+- (void) setRightViewVerticalAlign:(UIExpandingTextViewVerticalAlign)rightViewVerticalAlign {
+    if (_rightViewVerticalAlign != rightViewVerticalAlign) {
+        _rightViewVerticalAlign = rightViewVerticalAlign;
+        [self alignRightView];
+    }
+}
+
+- (void) setLeftViewVerticalAlign:(UIExpandingTextViewVerticalAlign)leftViewVerticalAlign {
+    if (_leftViewVerticalAlign != leftViewVerticalAlign) {
+        _leftViewVerticalAlign = leftViewVerticalAlign;
+        [self alignLeftView];
+    }
+}
+
+- (void) alignRightView {
+    if (!_rightView) {
+        return;
+    }
+    
+    switch (_rightViewVerticalAlign) {
+            case UIExpandingTextViewVerticalAlignBottom:
+            _rightView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin;
+            _rightView.center = CGPointMake(self.bounds.size.width - _rightView.bounds.size.width/2,
+                                           self.bounds.size.height - _rightView.bounds.size.height/2);
+            break;
+            
+            case UIExpandingTextViewVerticalAlignCenter:
+            _rightView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+            _rightView.center = CGPointMake(self.bounds.size.width - _rightView.bounds.size.width/2,
+                                           self.bounds.size.height/2);
+            break;
+            
+            case UIExpandingTextViewVerticalAlignTop:
+            _rightView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin;
+            _rightView.center = CGPointMake(self.bounds.size.width - _rightView.bounds.size.width/2,
+                                           _rightView.bounds.size.height/2);
+            break;
+    }
+}
+
+- (void) alignLeftView {
+    if (!_leftView) {
+        return;
+    }
+    
+    switch (_leftViewVerticalAlign) {
+            case UIExpandingTextViewVerticalAlignBottom:
+            _leftView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin;
+            _leftView.center = CGPointMake(_leftView.bounds.size.width/2,
+                                            self.bounds.size.height - _leftView.bounds.size.height/2);
+            break;
+            
+            case UIExpandingTextViewVerticalAlignCenter:
+            _leftView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+            _leftView.center = CGPointMake(_leftView.bounds.size.width/2,
+                                            self.bounds.size.height/2);
+            break;
+            
+            case UIExpandingTextViewVerticalAlignTop:
+            _leftView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin;
+            _leftView.center = CGPointMake(_leftView.bounds.size.width/2,
+                                            _leftView.bounds.size.height/2);
+            break;
+    }
 }
 
 - (CGFloat) maximumHeight{
@@ -243,7 +355,7 @@
             fudgeFactor = CGSizeMake(10.0, 16.0);
             
             frame.size.height -= fudgeFactor.height;
-            frame.size.width -= fudgeFactor.width;
+            frame.size.width -= fudgeFactor.width + self.internalTextView.textContainerInset.left + self.internalTextView.textContainerInset.right;
             
             static NSMutableAttributedString* textToMeasure;
             if(self.internalTextView.attributedText && self.internalTextView.attributedText.length > 0){
