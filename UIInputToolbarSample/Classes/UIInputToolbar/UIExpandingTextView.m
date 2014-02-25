@@ -94,6 +94,9 @@
         }
         else{
             textViewBackgroundImage = [UIImage imageNamed:@"textbg_7"];
+            UIEdgeInsets originalInset = self.internalTextView.textContainerInset;
+            originalInset.bottom = 6;
+            self.internalTextView.textContainerInset = originalInset;
         }
         
         textViewBackgroundImage = [textViewBackgroundImage resizableImageWithCapInsets:UIEdgeInsetsMake(floorf(textViewBackgroundImage.size.height/2),
@@ -302,9 +305,6 @@
 				[UIView setAnimationDidStopSelector:@selector(growDidStop)];
 				[UIView setAnimationBeginsFromCurrentState:YES];
 			}
-			
-            //fix for iOS7
-            newHeight++;
             
 			if ([self.delegate respondsToSelector:@selector(expandingTextView:willChangeHeight:)]) {
                 [self.delegate expandingTextView:self willChangeHeight:(newHeight)];
@@ -341,9 +341,18 @@
 	}
     
     //Scroll to bottom on iOS7
-    if (!self.isOnPreIOS7 && self.internalTextView.text.length && textHeight > self.maximumHeight) {
-        [self.internalTextView setContentOffset:CGPointMake(0, textHeight - self.internalTextView.bounds.size.height)
-                                       animated:NO];
+    if (!self.isOnPreIOS7 && textHeight > self.maximumHeight) {
+        CGRect line = [textView caretRectForPosition:
+                       textView.selectedTextRange.start];
+        CGFloat overflow = line.origin.y + line.size.height
+        - ( textView.contentOffset.y + textView.bounds.size.height - textView.contentInset.bottom - textView.contentInset.top );
+        if ( overflow > 0 ) {
+            // We are at the bottom of the visible text and introduced a line feed, scroll down (iOS 7 does not do it)
+            // Scroll caret to visible area
+            CGPoint offset = textView.contentOffset;
+            offset.y += overflow + textView.textContainerInset.bottom;
+            [textView setContentOffset:offset];
+        }
     }
 }
 
@@ -465,7 +474,7 @@
 
 - (BOOL)hasText
 {
-	return [self.internalTextView.text length];
+	return self.internalTextView.text.length > 0;
 }
 
 - (void)scrollRangeToVisible:(NSRange)range
