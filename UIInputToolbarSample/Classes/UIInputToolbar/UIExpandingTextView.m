@@ -277,7 +277,6 @@
     }
 }
 
-
 - (void)textViewDidChange:(UITextView *)textView {
     
     if(textView.text.length == 0)
@@ -296,7 +295,7 @@
         newHeight = self.maximumHeight;
     }
     
-	if (self.internalTextView.frame.size.height != newHeight || self.forceSizeUpdate) {
+	if (self.frame.size.height != newHeight || self.forceSizeUpdate) {
         self.forceSizeUpdate = NO;
 		if (newHeight <= self.maximumHeight) {
 			if(self.animateHeightChange) {
@@ -311,15 +310,21 @@
 			}
             
             if (newHeight >= self.maximumHeight) {
-                /* Enable vertical scrolling */
+                // Enable vertical scrolling
                 if(!self.internalTextView.scrollEnabled) {
                     self.internalTextView.scrollEnabled = YES;
                     [self.internalTextView flashScrollIndicators];
                 }
             }
             else {
-                /* Disable vertical scrolling */
+                // Disable vertical scrolling
                 self.internalTextView.scrollEnabled = NO;
+            }
+            
+            // Force UITextView to rerender text after height changes
+            if (self.frame.size.height < newHeight) {
+                self.internalTextView.frame = CGRectInset(self.internalTextView.frame, 1, 0);
+                self.internalTextView.frame = CGRectInset(self.internalTextView.frame, -1, 0);
             }
 			
 			// Resize the frame
@@ -330,14 +335,10 @@
 			if(self.animateHeightChange) {
 				[UIView commitAnimations];
 			}
-            else if ([self.delegate respondsToSelector:@selector(expandingTextView:didChangeHeight:)]) {
-                [self.delegate expandingTextView:self didChangeHeight:(newHeight)];
+            else {
+                [self growDidStop];
             }
 		}
-	}
-	
-	if ([self.delegate respondsToSelector:@selector(expandingTextViewDidChange:)]) {
-		[self.delegate expandingTextViewDidChange:self];
 	}
     
     //Scroll to bottom on iOS7
@@ -354,6 +355,10 @@
             [textView setContentOffset:offset];
         }
     }
+    
+    if ([self.delegate respondsToSelector:@selector(expandingTextViewDidChange:)]) {
+		[self.delegate expandingTextViewDidChange:self];
+	}
 }
 
 -(void)growDidStop
