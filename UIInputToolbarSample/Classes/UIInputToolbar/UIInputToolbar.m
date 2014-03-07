@@ -63,7 +63,7 @@ static NSString* const kInputButtonTitleSay = @"Say";
 		{
 			[_inputDelegate sayButtonPressed:self];
 		}
-
+        
 	}
 }
 
@@ -128,7 +128,7 @@ static NSString* const kInputButtonTitleSay = @"Say";
         self.rightButton.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
         self.rightButton.titleLabel.shadowOffset = CGSizeMake(0, -1);
         [self.rightButton setTitleColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.7]
-                     forState:UIControlStateDisabled];
+                               forState:UIControlStateDisabled];
         [self.rightButton setTitle:maxRightButtonTitle forState:UIControlStateNormal];
         [self.rightButton sizeToFit];
         
@@ -136,7 +136,7 @@ static NSString* const kInputButtonTitleSay = @"Say";
         bounds.size.height = kDefaultButtonHeight;
         self.rightButton.bounds = bounds;
         [self.rightButton setTitle:buttonLabel forState:UIControlStateNormal];
-
+        
         buttonPlus.bounds = CGRectMake(0, 0, self.rightButton.bounds.size.height, self.rightButton.bounds.size.height);
         buttonPlus.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 6, 2);
         buttonPlus.titleLabel.font = [UIFont boldSystemFontOfSize:30.0f];
@@ -148,12 +148,20 @@ static NSString* const kInputButtonTitleSay = @"Say";
     }
     
     else{
-        UIColor *buttonNormalColor = [UIColor colorWithRed:0 green:0.48 blue:1 alpha:1];
-        UIColor *buttonHighlightedColor = [UIColor colorWithRed:0.6 green:0.8 blue:1 alpha:1];
+        UIColor *buttonNormalColor = [[[UIApplication sharedApplication] delegate] window].tintColor;
+        CGFloat hue, saturation, brightness, alpha;
+        [buttonNormalColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+        if (brightness > 0.5) {
+            brightness -= 0.2;
+        }
+        else {
+            brightness += 0.2;
+        }
+        UIColor *buttonHighlightedColor = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
         UIColor *buttonDisabledColor = [UIColor lightGrayColor];
         
         /* Create custom send button*/
-        self.rightButton.titleLabel.font = [UIFont boldSystemFontOfSize:17.0f];
+        self.rightButton.titleLabel.font = [UIFont systemFontOfSize:17.0f];
         [self.rightButton setTitleColor:buttonNormalColor forState:UIControlStateNormal];
         [self.rightButton setTitleColor:buttonHighlightedColor forState:UIControlStateHighlighted];
         [self.rightButton setTitleColor:buttonDisabledColor forState:UIControlStateDisabled];
@@ -167,18 +175,17 @@ static NSString* const kInputButtonTitleSay = @"Say";
         
         buttonPlus.bounds = CGRectMake(0, 0, self.rightButton.bounds.size.height, self.rightButton.bounds.size.height);
         buttonPlus.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 8, 0);
-        buttonPlus.titleLabel.font = [UIFont systemFontOfSize:40.0f];
+        buttonPlus.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Thin" size:35];
         [buttonPlus setTitleColor:buttonNormalColor forState:UIControlStateNormal];
         [buttonPlus setTitleColor:buttonHighlightedColor forState:UIControlStateHighlighted];
         [buttonPlus setTitleColor:buttonDisabledColor forState:UIControlStateDisabled];
-        
         toolbarEdgeSeparatorWidth = -12;
     }
     
     self.plusButtonItem = [[UIBarButtonItem alloc] initWithCustomView:buttonPlus];
     self.inputButton = [[UIBarButtonItem alloc] initWithCustomView:self.rightButton];
     self.inputButton.customView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-
+    
     /* Create UIExpandingTextView input */
     self.textView = [[UIExpandingTextView alloc] initWithFrame:self.bounds];
     self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -308,7 +315,7 @@ static NSString* const kInputButtonTitleSay = @"Say";
     else {
         [self.rightButton setTitle:kInputButtonTitleSay forState:UIControlStateNormal];
     }
-
+    
     if ([self.inputDelegate respondsToSelector:@selector(inputToolbarViewDidChange:)]) {
         [self.inputDelegate inputToolbarViewDidChange:self];
     }
