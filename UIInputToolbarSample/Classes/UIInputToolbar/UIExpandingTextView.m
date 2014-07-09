@@ -390,7 +390,7 @@
         self.placeholderLabel.alpha = 0;
     
     CGFloat textHeight = [self measureHeight];
-	CGFloat newHeight = textHeight;
+	__block CGFloat newHeight = textHeight;
 	
     if(newHeight < self.minimumHeight || ![self hasText]) {
         newHeight = self.minimumHeight;
@@ -403,44 +403,20 @@
 	if (self.frame.size.height != newHeight || self.forceSizeUpdate) {
         self.forceSizeUpdate = NO;
 		if (newHeight <= self.maximumHeight) {
-			if(self.animateHeightChange) {
-				[UIView beginAnimations:@"" context:nil];
-				[UIView setAnimationDelegate:self];
-				[UIView setAnimationDidStopSelector:@selector(growDidStop)];
-				[UIView setAnimationBeginsFromCurrentState:YES];
-			}
             
-			if ([self.delegate respondsToSelector:@selector(expandingTextView:willChangeHeight:)]) {
-                [self.delegate expandingTextView:self willChangeHeight:(newHeight)];
-			}
-            
-            if (newHeight >= self.maximumHeight) {
-                // Enable vertical scrolling
-                if(!self.internalTextView.scrollEnabled) {
-                    self.internalTextView.scrollEnabled = YES;
-                    [self.internalTextView flashScrollIndicators];
-                }
+            if (self.animateHeightChange) {
+                [UIView animateWithDuration:0.2
+                                 animations:^{
+                                     [self updateHeight:newHeight];
+                                 }
+                                 completion:^(BOOL success){
+                                     if (success) {
+                                         [self growDidStop];
+                                     }
+                                 }];
             }
             else {
-                // Disable vertical scrolling
-                self.internalTextView.scrollEnabled = NO;
-            }
-            
-            // Force UITextView to rerender text after height changes
-            if (self.frame.size.height < newHeight) {
-                self.internalTextView.frame = CGRectInset(self.internalTextView.frame, 1, 0);
-                self.internalTextView.frame = CGRectInset(self.internalTextView.frame, -1, 0);
-            }
-			
-			// Resize the frame
-			CGRect r = self.frame;
-			r.size.height = newHeight;
-			self.frame = r;
-            
-			if(self.animateHeightChange) {
-				[UIView commitAnimations];
-			}
-            else {
+                [self updateHeight:newHeight];
                 [self growDidStop];
             }
 		}
@@ -466,9 +442,38 @@
 	}
 }
 
+- (void) updateHeight:(CGFloat) newHeight {
+    if ([self.delegate respondsToSelector:@selector(expandingTextView:willChangeHeight:)]) {
+        [self.delegate expandingTextView:self willChangeHeight:(newHeight)];
+    }
+    
+    if (newHeight >= self.maximumHeight) {
+        // Enable vertical scrolling
+        if(!self.internalTextView.scrollEnabled) {
+            self.internalTextView.scrollEnabled = YES;
+            [self.internalTextView flashScrollIndicators];
+        }
+    }
+    else {
+        // Disable vertical scrolling
+        self.internalTextView.scrollEnabled = NO;
+    }
+    
+    // Force UITextView to rerender text after height changes
+    if (self.frame.size.height < newHeight) {
+        self.internalTextView.frame = CGRectInset(self.internalTextView.frame, 1, 0);
+        self.internalTextView.frame = CGRectInset(self.internalTextView.frame, -1, 0);
+    }
+    
+    // Resize the frame
+    CGRect r = self.frame;
+    r.size.height = newHeight;
+    self.frame = r;
+}
+
 -(void)growDidStop
 {
-	if ([self.delegate respondsToSelector:@selector(expandingTextView:didChangeHeight:)]) 
+	if ([self.delegate respondsToSelector:@selector(expandingTextView:didChangeHeight:)])
     {
 		[self.delegate expandingTextView:self didChangeHeight:self.frame.size.height];
 	}
