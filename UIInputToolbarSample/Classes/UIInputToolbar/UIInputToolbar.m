@@ -33,7 +33,6 @@
 static CGFloat kDefaultButtonHeight = 26;
 static CGFloat kInputFieltMargin = 8;
 static NSString* const kInputButtonTitleSend = @"Send";
-static NSString* const kInputButtonTitleSay = @"Say";
 
 @interface UIInputToolbar()
 @property (strong, nonatomic) UIBarButtonItem *edgeSeparator;
@@ -56,14 +55,6 @@ static NSString* const kInputButtonTitleSay = @"Say";
 		{
 			[_inputDelegate inputButtonPressed:self];
 		}
-	}
-	else
-	{
-		if ([_inputDelegate respondsToSelector:@selector(sayButtonPressed:)])
-		{
-			[_inputDelegate sayButtonPressed:self];
-		}
-        
 	}
 }
 
@@ -214,7 +205,7 @@ static NSString* const kInputButtonTitleSay = @"Say";
 -(id)initWithFrame:(CGRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
-        [self setupToolbar:kInputButtonTitleSay possibleLabels:[NSSet setWithObjects:kInputButtonTitleSay, kInputButtonTitleSend, nil]];
+        [self setupToolbar:kInputButtonTitleSend possibleLabels:[NSSet setWithObjects:kInputButtonTitleSend, nil]];
     }
     return self;
 }
@@ -222,7 +213,7 @@ static NSString* const kInputButtonTitleSay = @"Say";
 -(id)init
 {
     if ((self = [super init])) {
-        [self setupToolbar:kInputButtonTitleSay possibleLabels:[NSSet setWithObjects:kInputButtonTitleSay, kInputButtonTitleSend, nil]];
+        [self setupToolbar:kInputButtonTitleSend possibleLabels:[NSSet setWithObjects:kInputButtonTitleSend, nil]];
     }
     return self;
 }
@@ -310,10 +301,10 @@ static NSString* const kInputButtonTitleSay = @"Say";
 {
     /* Enable/Disable the button */
     if ([expandingTextView.text length] > 0){
-        [self.rightButton setTitle:kInputButtonTitleSend forState:UIControlStateNormal];
+        self.rightButton.enabled = YES;
     }
     else {
-        [self.rightButton setTitle:kInputButtonTitleSay forState:UIControlStateNormal];
+        self.rightButton.enabled = NO;
     }
     
     if ([self.inputDelegate respondsToSelector:@selector(inputToolbarViewDidChange:)]) {

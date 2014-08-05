@@ -35,7 +35,6 @@
 @protocol UIInputToolbarDelegate <NSObject>
 @optional
 -(void)inputButtonPressed:(UIInputToolbar *) toolbar;
--(void)sayButtonPressed:(UIInputToolbar *) toolbar;
 -(void)plusButtonPressed:(UIInputToolbar *) toolbar;
 -(void)inputToolbar:(UIInputToolbar *) inputToolbar DidChangeHeight:(CGFloat) height;
 -(void)inputToolbar:(UIInputToolbar *) inputToolbar WillChangeHeight:(CGFloat) height;
