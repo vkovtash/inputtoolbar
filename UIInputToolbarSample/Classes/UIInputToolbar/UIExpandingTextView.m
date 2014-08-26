@@ -527,17 +527,15 @@
     {
 		if ([self.delegate respondsToSelector:@selector(expandingTextViewShouldReturn:)]) 
         {
-			if (![self.delegate performSelector:@selector(expandingTextViewShouldReturn:) withObject:self]) 
-            {
-				return YES;
-			} 
-            else 
-            {
-				[textView resignFirstResponder];
-				return NO;
-			}
+			return [self.delegate expandingTextViewShouldReturn:self];
 		}
 	}
+    else {
+        if ([self.delegate respondsToSelector:@selector(expandingTextView:shouldChangeTextInRange:replacementText:)]) {
+            return [self.delegate expandingTextView:self shouldChangeTextInRange:range replacementText:atext];
+        }
+    }
+    
 	return YES;
 }
 

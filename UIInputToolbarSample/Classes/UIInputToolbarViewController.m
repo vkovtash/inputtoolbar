@@ -56,6 +56,7 @@
     self.inputToolbar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.inputToolbar];
     inputToolbar.inputDelegate = self;
+    inputToolbar.isInputButtonVisible = NO;
     inputToolbar.textView.placeholder = @"Placeholder";
     inputToolbar.textView.maximumNumberOfLines = 4;
 }
@@ -93,6 +94,10 @@
 
 - (void) plusSwitchPressed:(UISwitch *) plusSwitch {
     self.inputToolbar.isPlusButtonVisible = plusSwitch.on;
+}
+
+- (BOOL)inputToolbarViewShouldReturn:(UIInputToolbar *)inputToolbar {
+    return NO;
 }
 
 #pragma mark -
