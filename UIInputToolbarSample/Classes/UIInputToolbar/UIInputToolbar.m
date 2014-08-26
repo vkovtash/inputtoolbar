@@ -197,15 +197,19 @@ static CGFloat kInputFieltMargin = 8;
 }
 
 - (void) adjustVisibleItems {
-    
+    NSMutableArray *items = [NSMutableArray arrayWithObject:self.edgeSeparator];
     if (_isPlusButtonVisible) {
-        [self setItems:@[self.edgeSeparator, self.plusButtonItem, self.textInputItem, self.inputButton, self.edgeSeparator]
-              animated:NO];
+        [items addObject:self.plusButtonItem];
     }
-    else {
-        [self setItems:@[self.edgeSeparator, self.textInputItem, self.inputButton, self.edgeSeparator]
-              animated:NO];
+    [items addObject:self.textInputItem];
+    
+    if (_isinputButtonVisible) {
+        [items addObject:self.inputButton];
     }
+    
+    [items addObject:self.edgeSeparator];
+    
+    [self setItems:items animated:NO];
     [self layoutExpandingTextView];
 }
 
@@ -250,6 +254,13 @@ static CGFloat kInputFieltMargin = 8;
 - (void) setIsPlusButtonVisible:(BOOL)isPlusButtonVisible {
     if (_isPlusButtonVisible != isPlusButtonVisible) {
         _isPlusButtonVisible = isPlusButtonVisible;
+        [self adjustVisibleItems];
+    }
+}
+
+- (void)setIsinputButtonVisible:(BOOL)isinputButtonVisible {
+    if (_isinputButtonVisible != isinputButtonVisible) {
+        _isinputButtonVisible = isinputButtonVisible;
         [self adjustVisibleItems];
     }
 }

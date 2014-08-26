@@ -112,6 +112,7 @@
 		self.internalTextView.delegate = self;
         self.internalTextView.text = @"-";
         self.internalTextView.opaque = NO;
+        self.internalTextView.returnKeyType = UIReturnKeySend;
         self.internalTextView.backgroundColor = [UIColor clearColor];
         self.internalTextView.showsHorizontalScrollIndicator = NO;
         self.internalTextView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;

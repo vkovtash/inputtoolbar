@@ -56,6 +56,7 @@
     self.inputToolbar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.inputToolbar];
     inputToolbar.inputDelegate = self;
+    inputToolbar.isinputButtonVisible = NO;
     inputToolbar.textView.placeholder = @"Placeholder";
     inputToolbar.textView.maximumNumberOfLines = 4;
 }
