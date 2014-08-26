@@ -46,6 +46,7 @@
 - (BOOL)inputToolbar:(UIInputToolbar *)inputToolbar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
 - (void)inputToolbarViewDidChange:(UIInputToolbar *)inputToolbar;
 - (void)inputToolbarViewDidChangeSelection:(UIInputToolbar *)inputToolbar;
+- (BOOL)inputToolbarViewShouldReturn:(UIInputToolbar *)inputToolbar;
 @end
 
 @interface UIInputToolbar : UIToolbar <UIExpandingTextViewDelegate>
@@ -54,6 +55,7 @@
 @property (strong,nonatomic) UIBarButtonItem *inputButton;
 @property (strong,nonatomic) UIBarButtonItem *plusButtonItem;
 @property (nonatomic) BOOL isPlusButtonVisible;
+@property (nonatomic) BOOL isinputButtonVisible;
 @property (weak,nonatomic) NSObject<UIInputToolbarDelegate> *inputDelegate;
 
 - (id)initWithFrame:(CGRect)frame label:(NSString *)label;
