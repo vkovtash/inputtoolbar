@@ -203,7 +203,7 @@ static CGFloat kInputFieltMargin = 8;
     }
     [items addObject:self.textInputItem];
     
-    if (_isinputButtonVisible) {
+    if (_isInputButtonVisible) {
         [items addObject:self.inputButton];
     }
     
@@ -258,11 +258,15 @@ static CGFloat kInputFieltMargin = 8;
     }
 }
 
-- (void)setIsinputButtonVisible:(BOOL)isinputButtonVisible {
-    if (_isinputButtonVisible != isinputButtonVisible) {
-        _isinputButtonVisible = isinputButtonVisible;
+- (void)setIsInputButtonVisible:(BOOL)isInputButtonVisible {
+    if (_isInputButtonVisible != isInputButtonVisible) {
+        _isInputButtonVisible = isInputButtonVisible;
         [self adjustVisibleItems];
     }
+}
+
+- (void)setIsinputButtonVisible:(BOOL)isinputButtonVisible {
+    
 }
 
 #pragma mark - UIExpandingTextView delegate
