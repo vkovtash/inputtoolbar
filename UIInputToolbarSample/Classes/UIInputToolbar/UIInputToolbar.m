@@ -327,4 +327,11 @@ static CGFloat kInputFieltMargin = 8;
     }
 }
 
+- (BOOL)expandingTextViewShouldReturn:(UIExpandingTextView *)expandingTextView {
+    if ([self.inputDelegate respondsToSelector:@selector(inputToolbarViewShouldReturn:)]) {
+        return [self.inputDelegate inputToolbarViewShouldReturn:self];
+    }
+    return YES;
+}
+
 @end

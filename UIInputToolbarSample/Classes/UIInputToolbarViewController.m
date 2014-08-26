@@ -95,6 +95,10 @@
     self.inputToolbar.isPlusButtonVisible = plusSwitch.on;
 }
 
+- (BOOL)inputToolbarViewShouldReturn:(UIInputToolbar *)inputToolbar {
+    return NO;
+}
+
 #pragma mark -
 #pragma mark Notifications
 

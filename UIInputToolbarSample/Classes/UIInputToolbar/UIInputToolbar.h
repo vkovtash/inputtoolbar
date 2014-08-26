@@ -46,6 +46,7 @@
 - (BOOL)inputToolbar:(UIInputToolbar *)inputToolbar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
 - (void)inputToolbarViewDidChange:(UIInputToolbar *)inputToolbar;
 - (void)inputToolbarViewDidChangeSelection:(UIInputToolbar *)inputToolbar;
+- (BOOL)inputToolbarViewShouldReturn:(UIInputToolbar *)inputToolbar;
 @end
 
 @interface UIInputToolbar : UIToolbar <UIExpandingTextViewDelegate>
