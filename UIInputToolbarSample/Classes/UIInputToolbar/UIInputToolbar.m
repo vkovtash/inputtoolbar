@@ -69,10 +69,6 @@ static NSString* const kInputButtonTitleSend = @"Send";
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
     _isPlusButtonVisible = YES;
     
-    self.rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.rightButton setTitle:buttonLabel forState:UIControlStateNormal];
-    [self.rightButton addTarget:self action:@selector(inputButtonPressed) forControlEvents:UIControlEventTouchDown];
-    
     NSString *maxRightButtonTitle = nil;
     for(NSString *possibleLabel in possibleLabels) {
         if (possibleLabel.length > maxRightButtonTitle.length) {
@@ -80,15 +76,12 @@ static NSString* const kInputButtonTitleSend = @"Send";
         }
     }
     
-    UIButton *buttonPlus = [UIButton buttonWithType:UIButtonTypeCustom];
-    [buttonPlus setTitle:@"+" forState:UIControlStateNormal];
-    [buttonPlus addTarget:self action:@selector(plusButtonPressed) forControlEvents:UIControlEventTouchDown];
-    buttonPlus.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    UIButton *buttonPlus = nil;
     
     CGFloat toolbarEdgeSeparatorWidth = 0;
     
     if (SYSTEM_VERSION_LESS_THAN(@"7.0")){
-        
+        self.rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
         UIImage *toolbarBackground = nil;
         UIImage *buttonImage = nil;
         toolbarBackground = [UIImage imageNamed:@"toolbarbg.png"];
@@ -104,6 +97,7 @@ static NSString* const kInputButtonTitleSend = @"Send";
                                                                                 floorf(buttonImage.size.height/2),
                                                                                 floorf(buttonImage.size.height/2))];
         
+        buttonPlus = [UIButton buttonWithType:UIButtonTypeCustom];
         UIImage *plusButtonImage = [buttonImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
         
         [self.rightButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
@@ -112,9 +106,7 @@ static NSString* const kInputButtonTitleSend = @"Send";
         [buttonPlus setBackgroundImage:plusButtonImage forState:UIControlStateNormal];
         [buttonPlus setBackgroundImage:plusButtonImage forState:UIControlStateDisabled];
         
-        /* Create custom send button*/
-        
-        
+
         self.rightButton.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 0, 2);
         self.rightButton.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
         self.rightButton.titleLabel.shadowOffset = CGSizeMake(0, -1);
@@ -128,6 +120,7 @@ static NSString* const kInputButtonTitleSend = @"Send";
         self.rightButton.bounds = bounds;
         [self.rightButton setTitle:buttonLabel forState:UIControlStateNormal];
         
+        [buttonPlus setTitle:@"+" forState:UIControlStateNormal];
         buttonPlus.bounds = CGRectMake(0, 0, self.rightButton.bounds.size.height, self.rightButton.bounds.size.height);
         buttonPlus.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 6, 2);
         buttonPlus.titleLabel.font = [UIFont boldSystemFontOfSize:30.0f];
@@ -137,45 +130,33 @@ static NSString* const kInputButtonTitleSend = @"Send";
         
         toolbarEdgeSeparatorWidth = -6;
     }
-    
-    else{
-        UIColor *buttonNormalColor = [[[UIApplication sharedApplication] delegate] window].tintColor;
-        CGFloat hue, saturation, brightness, alpha;
-        [buttonNormalColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
-        if (brightness > 0.5) {
-            brightness -= 0.2;
-        }
-        else {
-            brightness += 0.2;
-        }
-        UIColor *buttonHighlightedColor = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
-        UIColor *buttonDisabledColor = [UIColor lightGrayColor];
-        
-        /* Create custom send button*/
+    else {
+        self.rightButton = [UIButton buttonWithType:UIButtonTypeSystem];
         self.rightButton.titleLabel.font = [UIFont systemFontOfSize:17.0f];
-        [self.rightButton setTitleColor:buttonNormalColor forState:UIControlStateNormal];
-        [self.rightButton setTitleColor:buttonHighlightedColor forState:UIControlStateHighlighted];
-        [self.rightButton setTitleColor:buttonDisabledColor forState:UIControlStateDisabled];
         [self.rightButton setTitle:maxRightButtonTitle forState:UIControlStateNormal];
         [self.rightButton sizeToFit];
+        self.rightButton.tintColor = [[[UIApplication sharedApplication] delegate] window].tintColor;
         
         CGRect bounds = self.rightButton.bounds;
         bounds.size.height = kDefaultButtonHeight;
         self.rightButton.bounds = bounds;
         [self.rightButton setTitle:buttonLabel forState:UIControlStateNormal];
         
+        buttonPlus = [UIButton buttonWithType:UIButtonTypeCustom];
+        [buttonPlus setTitle:@"+" forState:UIControlStateNormal];
         buttonPlus.bounds = CGRectMake(0, 0, self.rightButton.bounds.size.height, self.rightButton.bounds.size.height);
         buttonPlus.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 8, 0);
         buttonPlus.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Thin" size:35];
-        [buttonPlus setTitleColor:buttonNormalColor forState:UIControlStateNormal];
-        [buttonPlus setTitleColor:buttonHighlightedColor forState:UIControlStateHighlighted];
-        [buttonPlus setTitleColor:buttonDisabledColor forState:UIControlStateDisabled];
         toolbarEdgeSeparatorWidth = -12;
     }
     
-    self.plusButtonItem = [[UIBarButtonItem alloc] initWithCustomView:buttonPlus];
     self.inputButton = [[UIBarButtonItem alloc] initWithCustomView:self.rightButton];
     self.inputButton.customView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    self.plusButtonItem = [[UIBarButtonItem alloc] initWithCustomView:buttonPlus];
+    self.plusButtonItem.customView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    
+    [self.rightButton addTarget:self action:@selector(inputButtonPressed) forControlEvents:UIControlEventTouchDown];
+    [buttonPlus addTarget:self action:@selector(plusButtonPressed) forControlEvents:UIControlEventTouchDown];
     
     /* Create UIExpandingTextView input */
     self.textView = [[UIExpandingTextView alloc] initWithFrame:self.bounds];
