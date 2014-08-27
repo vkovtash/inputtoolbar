@@ -131,7 +131,7 @@ static NSString* const kInputButtonTitleSend = @"Send";
         toolbarEdgeSeparatorWidth = -6;
     }
     else {
-        self.rightButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        self.rightButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         self.rightButton.titleLabel.font = [UIFont systemFontOfSize:17.0f];
         [self.rightButton setTitle:maxRightButtonTitle forState:UIControlStateNormal];
         [self.rightButton sizeToFit];
@@ -197,6 +197,10 @@ static NSString* const kInputButtonTitleSend = @"Send";
         [self setupToolbar:kInputButtonTitleSend possibleLabels:[NSSet setWithObjects:kInputButtonTitleSend, nil]];
     }
     return self;
+}
+
+- (void) tintColorDidChange {
+    self.rightButton.tintColor = [UIApplication sharedApplication].keyWindow.tintColor;
 }
 
 - (void) adjustVisibleItems {
