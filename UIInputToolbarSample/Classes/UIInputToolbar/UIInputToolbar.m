@@ -200,7 +200,7 @@ static NSString* const kInputButtonTitleSend = @"Send";
 }
 
 - (void) tintColorDidChange {
-    self.rightButton.tintColor = [UIApplication sharedApplication].keyWindow.tintColor;
+    self.rightButton.tintColor = [UIApplication sharedApplication].delegate.window.tintColor;
 }
 
 - (void) adjustVisibleItems {
