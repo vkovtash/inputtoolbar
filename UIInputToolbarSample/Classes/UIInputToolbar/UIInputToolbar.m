@@ -172,6 +172,14 @@ static CGFloat kInputFieltMargin = 8;
     self.animateHeightChanges = YES;
 }
 
+-(id)initWithCoder:(NSCoder *)aDecoder
+{
+    if ((self = [super initWithCoder:aDecoder])) {
+        [self setupToolbar:@"Send"];
+    }
+    return self;
+}
+
 -(id)initWithFrame:(CGRect)frame label:(NSString *)label
 {
     if ((self = [super initWithFrame:frame])) {
