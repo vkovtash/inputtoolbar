@@ -25,10 +25,7 @@
 
 #import "UIInputToolbarViewController.h"
 
-#define kStatusBarHeight 20
 #define kDefaultToolbarHeight 40
-#define kKeyboardHeightPortrait 216
-#define kKeyboardHeightLandscape 140
 
 @interface UIInputToolbarViewController()
 @end
@@ -68,17 +65,14 @@
 - (void)viewWillAppear:(BOOL)animated 
 {
 	[super viewWillAppear:animated];
-	/* Listen for keyboard */
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated 
 {
 	[super viewWillDisappear:animated];
 	/* No longer listen for keyboard */
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
 }
 
 - (void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
@@ -98,44 +92,25 @@
 #pragma mark -
 #pragma mark Notifications
 
-- (void)keyboardWillShow:(NSNotification *)notification 
-{
-    /* Move the toolbar to above the keyboard */
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:0.3];
-	CGRect frame = self.inputToolbar.frame;
-    if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-        frame.origin.y = self.view.frame.size.height - frame.size.height - kKeyboardHeightPortrait;
-    }
-    else {
-        frame.origin.y = self.view.frame.size.width - frame.size.height - kKeyboardHeightLandscape - kStatusBarHeight;
-    }
-	self.inputToolbar.frame = frame;
-	[UIView commitAnimations];
-    keyboardIsVisible = YES;
+- (void)keyboardWillChange:(NSNotification *)notification {
+    CGRect keyboardRect = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGFloat newHeight = self.view.frame.size.height - [self.view convertRect:keyboardRect fromView:nil].origin.y;
+    CGRect frame = self.inputToolbar.frame;
+    frame.origin.y = self.view.bounds.size.height - newHeight - frame.size.height;
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
+    [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    self.inputToolbar.frame = frame;
+    [UIView commitAnimations];
 }
 
-- (void)keyboardWillHide:(NSNotification *)notification 
-{
-    /* Move the toolbar back to bottom of the screen */
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:0.3];
-	CGRect frame = self.inputToolbar.frame;
-    if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-        frame.origin.y = self.view.frame.size.height - frame.size.height;
-    }
-    else {
-        frame.origin.y = self.view.frame.size.width - frame.size.height;
-    }
-	self.inputToolbar.frame = frame;
-	[UIView commitAnimations];
-    keyboardIsVisible = NO;
-}
 
 -(void)inputButtonPressed:(UIInputToolbar *) toolbar
 {
     /* Called when toolbar button is pressed */
     NSLog(@"Pressed button with text: '%@'", toolbar.textView.text);
+    [self.inputToolbar.textView resignFirstResponder];
 }
 
 -(void) plusButtonPressed:(UIInputToolbar *) toolbar{
