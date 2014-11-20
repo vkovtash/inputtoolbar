@@ -25,6 +25,11 @@
 
 #import "UIInputToolbarViewController.h"
 
+#define handle_tap(view, delegate, selector) do {\
+view.userInteractionEnabled = YES;\
+[view addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:delegate action:selector]];\
+} while(0)
+
 #define kDefaultToolbarHeight 40
 
 @interface UIInputToolbarViewController()
@@ -55,6 +60,7 @@
     inputToolbar.inputDelegate = self;
     inputToolbar.textView.placeholder = @"Placeholder";
     inputToolbar.textView.maximumNumberOfLines = 4;
+    handle_tap(self.view, self, @selector(dismissToolbar:));
 }
 
 - (void)viewDidUnload
@@ -105,15 +111,21 @@
     [UIView commitAnimations];
 }
 
+#pragma mark -
+#pragma mark tap recogonizer
 
--(void)inputButtonPressed:(UIInputToolbar *) toolbar
-{
-    /* Called when toolbar button is pressed */
-    NSLog(@"Pressed button with text: '%@'", toolbar.textView.text);
+- (void)dismissToolbar: (UITapGestureRecognizer *)recogonizer{
     [self.inputToolbar.textView resignFirstResponder];
 }
 
--(void) plusButtonPressed:(UIInputToolbar *) toolbar{
+- (void)inputButtonPressed:(UIInputToolbar *) toolbar {
+    /* Called when toolbar button is pressed */
+    NSLog(@"Pressed button with text: '%@'", toolbar.textView.text);
+    toolbar.textView.text = @"";
+    [self.inputToolbar.textView resignFirstResponder];
+}
+
+- (void) plusButtonPressed:(UIInputToolbar *) toolbar {
     NSLog(@"Plus button pressed");
 }
 @end
