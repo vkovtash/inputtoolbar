@@ -55,6 +55,14 @@
 - (BOOL)expandingTextViewShouldReturn:(UIExpandingTextView *)expandingTextView;
 @end
 
+
+typedef NS_ENUM(int16_t, UIExpandingTextViewVerticalAlign) {
+    UIExpandingTextViewVerticalAlignBottom,
+    UIExpandingTextViewVerticalAlignCenter,
+    UIExpandingTextViewVerticalAlignTop,
+};
+
+
 @interface UIExpandingTextView : UIView <UITextViewDelegate>
 @property (weak,nonatomic) NSObject<UIExpandingTextViewDelegate> *delegate;
 @property (nonatomic, strong) UITextView *internalTextView;
@@ -80,6 +88,10 @@
 @property BOOL animateHeightChange;
 @property BOOL forceSizeUpdate;
 @property (readwrite, nonatomic) UIView *inputView;
+@property (strong, nonatomic) UIView *rightView;
+@property (nonatomic) UIExpandingTextViewVerticalAlign rightViewVerticalAlign;
+@property (strong, nonatomic) UIView *leftView;
+@property (nonatomic) UIExpandingTextViewVerticalAlign leftViewVerticalAlign;
 
 - (BOOL)hasText;
 - (void)scrollRangeToVisible:(NSRange)range;
