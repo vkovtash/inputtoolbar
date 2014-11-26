@@ -131,7 +131,7 @@ static NSString* const kInputButtonTitleSend = @"Send";
         toolbarEdgeSeparatorWidth = -6;
     }
     else {
-        self.rightButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        self.rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.rightButton.titleLabel.font = [UIFont systemFontOfSize:17.0f];
         [self.rightButton setTitle:maxRightButtonTitle forState:UIControlStateNormal];
         [self.rightButton sizeToFit];
@@ -141,7 +141,7 @@ static NSString* const kInputButtonTitleSend = @"Send";
         self.rightButton.bounds = bounds;
         [self.rightButton setTitle:buttonLabel forState:UIControlStateNormal];
         
-        buttonPlus = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        buttonPlus = [UIButton buttonWithType:UIButtonTypeCustom];
         [buttonPlus setTitle:@"+" forState:UIControlStateNormal];
         buttonPlus.bounds = CGRectMake(0, 0, self.rightButton.bounds.size.height, self.rightButton.bounds.size.height);
         buttonPlus.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 8, 0);
