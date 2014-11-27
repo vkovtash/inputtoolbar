@@ -1,5 +1,5 @@
 /*
- *  UIExpandingTextView.m
+ *  ZIMExpandingTextView.m
  *  
  *  Created by Vlad Kovtash on 2013/03/26.
  *  Copyright 2013 Vlad Kovtash.
@@ -28,21 +28,15 @@
  *  https://github.com/brandonhamilton/inputtoolbar
  */
 
-#import "UIExpandingTextView.h"
+#import "ZIMExpandingTextView.h"
 
 #define kTextInsetX 4
 
-#ifdef __IPHONE_6_0 // iOS6 and later
-#define VKTextAlignment NSTextAlignment
-#else // older versions
-#define VKTextAlignment UITextAlignment
-#endif
+@interface ZIMExpandingTextView()
 
-@interface UIExpandingTextView()
-@property (nonatomic) BOOL isOnPreIOS7;
 @end
 
-@implementation UIExpandingTextView
+@implementation ZIMExpandingTextView
 
 @synthesize internalTextView = _internalTextView;
 @synthesize text = _text;
@@ -83,21 +77,10 @@
         /* Custom Background image */
         UIImage *textViewBackgroundImage = nil;
         
-        self.isOnPreIOS7 = SYSTEM_VERSION_LESS_THAN(@"7.0");
-        
-        if (self.isOnPreIOS7){
-            textViewBackgroundImage = [UIImage imageNamed:@"textbg"];
-            self.internalTextView.contentInset = UIEdgeInsetsMake(-4, 0, 4, 0);
-            self.internalTextView.scrollIndicatorInsets = UIEdgeInsetsMake(6, 0, 6, 0);
-            self.placeholderLabel.frame = CGRectInset(textViewFrame, 4, 0);
-            self.placeholderLabel.frame = CGRectOffset(self.placeholderLabel.frame, 0, -1);
-        }
-        else{
-            textViewBackgroundImage = [UIImage imageNamed:@"textbg_7"];
-            UIEdgeInsets originalInset = self.internalTextView.textContainerInset;
-            originalInset.bottom = 6;
-            self.internalTextView.textContainerInset = originalInset;
-        }
+        textViewBackgroundImage = [UIImage imageNamed:@"textbg_7"];
+        UIEdgeInsets originalInset = self.internalTextView.textContainerInset;
+        originalInset.bottom = 6;
+        self.internalTextView.textContainerInset = originalInset;
         
         textViewBackgroundImage = [textViewBackgroundImage resizableImageWithCapInsets:UIEdgeInsetsMake(floorf(textViewBackgroundImage.size.height/2),
                                                                                                         floorf(textViewBackgroundImage.size.width/2),
@@ -188,14 +171,14 @@
     }
 }
 
-- (void) setRightViewVerticalAlign:(UIExpandingTextViewVerticalAlign)rightViewVerticalAlign {
+- (void) setRightViewVerticalAlign:(ZIMExpandingTextViewVerticalAlign)rightViewVerticalAlign {
     if (_rightViewVerticalAlign != rightViewVerticalAlign) {
         _rightViewVerticalAlign = rightViewVerticalAlign;
         [self alignRightView];
     }
 }
 
-- (void) setLeftViewVerticalAlign:(UIExpandingTextViewVerticalAlign)leftViewVerticalAlign {
+- (void) setLeftViewVerticalAlign:(ZIMExpandingTextViewVerticalAlign)leftViewVerticalAlign {
     if (_leftViewVerticalAlign != leftViewVerticalAlign) {
         _leftViewVerticalAlign = leftViewVerticalAlign;
         [self alignLeftView];
@@ -208,19 +191,19 @@
     }
     
     switch (_rightViewVerticalAlign) {
-            case UIExpandingTextViewVerticalAlignBottom:
+            case ZIMExpandingTextViewVerticalAlignBottom:
             _rightView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin;
             _rightView.center = CGPointMake(self.bounds.size.width - _rightView.bounds.size.width/2,
                                            self.bounds.size.height - _rightView.bounds.size.height/2);
             break;
             
-            case UIExpandingTextViewVerticalAlignCenter:
+            case ZIMExpandingTextViewVerticalAlignCenter:
             _rightView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
             _rightView.center = CGPointMake(self.bounds.size.width - _rightView.bounds.size.width/2,
                                            self.bounds.size.height/2);
             break;
             
-            case UIExpandingTextViewVerticalAlignTop:
+            case ZIMExpandingTextViewVerticalAlignTop:
             _rightView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin;
             _rightView.center = CGPointMake(self.bounds.size.width - _rightView.bounds.size.width/2,
                                            _rightView.bounds.size.height/2);
@@ -234,19 +217,19 @@
     }
     
     switch (_leftViewVerticalAlign) {
-            case UIExpandingTextViewVerticalAlignBottom:
+            case ZIMExpandingTextViewVerticalAlignBottom:
             _leftView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin;
             _leftView.center = CGPointMake(_leftView.bounds.size.width/2,
                                             self.bounds.size.height - _leftView.bounds.size.height/2);
             break;
             
-            case UIExpandingTextViewVerticalAlignCenter:
+            case ZIMExpandingTextViewVerticalAlignCenter:
             _leftView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
             _leftView.center = CGPointMake(_leftView.bounds.size.width/2,
                                             self.bounds.size.height/2);
             break;
             
-            case UIExpandingTextViewVerticalAlignTop:
+            case ZIMExpandingTextViewVerticalAlignTop:
             _leftView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin;
             _leftView.center = CGPointMake(_leftView.bounds.size.width/2,
                                             _leftView.bounds.size.height/2);
@@ -254,11 +237,11 @@
     }
 }
 
-- (CGFloat) maximumHeight{
+- (CGFloat) maximumHeight {
     return _maximumHeight;
 }
 
-- (void) setMaximumHeight:(CGFloat)maximumHeight{
+- (void) setMaximumHeight:(CGFloat)maximumHeight {
     if (_maximumHeight != maximumHeight) {
         _maximumHeight = maximumHeight;
         
@@ -269,11 +252,9 @@
     }
 }
 
--(void)sizeToFit
-{
+- (void) sizeToFit {
     CGRect r = self.frame;
-    if ([self.text length] > 0) 
-    {
+    if ([self.text length] > 0) {
         /* No need to resize is text is not empty */
         return;
     }
@@ -281,24 +262,21 @@
     self.frame = r;
 }
 
--(void)clearText
-{
+- (void) clearText {
     self.text = @"";
     [self textViewDidChange:self.internalTextView];
 }
 
-- (void)setPlaceholder:(NSString *)placeholders
-{
+- (void) setPlaceholder:(NSString *)placeholders {
     _placeholder = placeholders;
     self.placeholderLabel.text = placeholders;
 }
 
-- (NSInteger) maximumNumberOfLines{
+- (NSInteger) maximumNumberOfLines {
     return _maximumNumberOfLines;
 }
      
--(void)setMaximumNumberOfLines:(NSInteger)n
-{
+- (void) setMaximumNumberOfLines:(NSInteger)n {
     BOOL didChange            = NO;
     NSString *saveText        = self.internalTextView.text;
     NSString *newText         = @"-";
@@ -321,12 +299,11 @@
     }
 }
 
--(NSInteger) minimumNumberOfLines{
+- (NSInteger) minimumNumberOfLines {
     return _minimumNumberOfLines;
 }
 
--(void)setMinimumNumberOfLines:(NSInteger)m
-{
+- (void) setMinimumNumberOfLines:(NSInteger)m {
     NSString *saveText        = self.internalTextView.text;
     NSString *newText         = @"-";
     self.internalTextView.hidden   = YES;
@@ -344,50 +321,41 @@
 
 
 // Code from apple developer forum - @Steve Krulewitz, @Mark Marszal, @Eric Silverberg
-- (CGFloat)measureHeight
-{
-    if (self.isOnPreIOS7) {
-        return self.internalTextView.contentSize.height - 8;
+- (CGFloat) measureHeight {
+    CGRect frame = self.internalTextView.bounds;
+    CGSize fudgeFactor;
+    // The padding added around the text on iOS6 and iOS7 is different.
+    fudgeFactor = CGSizeMake(10.0, 16.0);
+    
+    frame.size.height -= fudgeFactor.height;
+    frame.size.width -= fudgeFactor.width + self.internalTextView.textContainerInset.left + self.internalTextView.textContainerInset.right;
+    
+    static NSMutableAttributedString* textToMeasure;
+    if(self.internalTextView.attributedText && self.internalTextView.attributedText.length > 0){
+        textToMeasure = [[NSMutableAttributedString alloc] initWithAttributedString:self.internalTextView.attributedText];
     }
-    else {
-        CGRect frame = self.internalTextView.bounds;
-        CGSize fudgeFactor;
-        // The padding added around the text on iOS6 and iOS7 is different.
-        fudgeFactor = CGSizeMake(10.0, 16.0);
-        
-        frame.size.height -= fudgeFactor.height;
-        frame.size.width -= fudgeFactor.width + self.internalTextView.textContainerInset.left + self.internalTextView.textContainerInset.right;
-        
-        static NSMutableAttributedString* textToMeasure;
-        if(self.internalTextView.attributedText && self.internalTextView.attributedText.length > 0){
-            textToMeasure = [[NSMutableAttributedString alloc] initWithAttributedString:self.internalTextView.attributedText];
-        }
-        else{
-            textToMeasure = [[NSMutableAttributedString alloc] initWithString:self.internalTextView.text];
-            [textToMeasure addAttribute:NSFontAttributeName value:self.internalTextView.font range:NSMakeRange(0, textToMeasure.length)];
-        }
-        
-        if ([textToMeasure.string hasSuffix:@"\n"])
-        {
-            [textToMeasure appendAttributedString:[[NSAttributedString alloc] initWithString:@"-" attributes:@{NSFontAttributeName: self.internalTextView.font}]];
-        }
-        
-        // NSAttributedString class method: boundingRectWithSize:options:context is
-        // available only on ios7.0 sdk.
-        CGRect size = [textToMeasure boundingRectWithSize:CGSizeMake(CGRectGetWidth(frame), MAXFLOAT)
-                                                  options:NSStringDrawingUsesLineFragmentOrigin
-                                                  context:nil];
-        
-        return CGRectGetHeight(size) + fudgeFactor.height;
+    else{
+        textToMeasure = [[NSMutableAttributedString alloc] initWithString:self.internalTextView.text];
+        [textToMeasure addAttribute:NSFontAttributeName value:self.internalTextView.font range:NSMakeRange(0, textToMeasure.length)];
     }
+    
+    if ([textToMeasure.string hasSuffix:@"\n"])
+    {
+        [textToMeasure appendAttributedString:[[NSAttributedString alloc] initWithString:@"-" attributes:@{NSFontAttributeName: self.internalTextView.font}]];
+    }
+    
+    // NSAttributedString class method: boundingRectWithSize:options:context is
+    // available only on ios7.0 sdk.
+    CGRect size = [textToMeasure boundingRectWithSize:CGSizeMake(CGRectGetWidth(frame), MAXFLOAT)
+                                              options:NSStringDrawingUsesLineFragmentOrigin
+                                              context:nil];
+    
+    return CGRectGetHeight(size) + fudgeFactor.height;
 }
 
-- (void)textViewDidChange:(UITextView *)textView {
+- (void) textViewDidChange:(UITextView *)textView {
     
-    if(textView.text.length == 0)
-        self.placeholderLabel.alpha = 1;
-    else
-        self.placeholderLabel.alpha = 0;
+    self.placeholderLabel.alpha = textView.text.length == 0 ? 1 : 0;
     
     CGFloat textHeight = [self measureHeight];
 	__block CGFloat newHeight = textHeight;
@@ -422,8 +390,7 @@
 		}
 	}
     
-    //Scroll to bottom on iOS7
-    if (!self.isOnPreIOS7 && textHeight > self.maximumHeight) {
+    if (textHeight > self.maximumHeight) {
         CGRect line = [textView caretRectForPosition:
                        textView.selectedTextRange.start];
         CGFloat overflow = line.origin.y + line.size.height
@@ -471,10 +438,8 @@
     self.frame = r;
 }
 
--(void)growDidStop
-{
-	if ([self.delegate respondsToSelector:@selector(expandingTextView:didChangeHeight:)])
-    {
+-(void) growDidStop {
+	if ([self.delegate respondsToSelector:@selector(expandingTextView:didChangeHeight:)]) {
 		[self.delegate expandingTextView:self didChangeHeight:self.frame.size.height];
 	}
 }
@@ -491,172 +456,133 @@
     return self.internalTextView.inputView;
 }
 
-- (BOOL) becomeFirstResponder{
+- (BOOL) becomeFirstResponder {
     return [self.internalTextView becomeFirstResponder];
 }
 
--(BOOL)resignFirstResponder
-{
+- (BOOL) resignFirstResponder {
 	[super resignFirstResponder];
 	return [self.internalTextView resignFirstResponder];
 }
 
 #pragma mark UITextView properties
 
--(void)setText:(NSString *)atext
-{
+-(void) setText:(NSString *)atext {
 	self.internalTextView.text = atext;
     [self performSelector:@selector(textViewDidChange:) withObject:self.internalTextView];
 }
 
--(NSString*)text
-{
+- (NSString *) text {
 	return self.internalTextView.text;
 }
 
--(void)setFont:(UIFont *)afont
-{
+- (void) setFont:(UIFont *)afont {
 	self.internalTextView.font = afont;
     self.placeholderLabel.font = afont;
     [self setMaximumNumberOfLines:self.maximumNumberOfLines];
 	[self setMinimumNumberOfLines:self.minimumNumberOfLines];
 }
 
--(UIFont *)font
-{
+- (UIFont *) font {
 	return self.internalTextView.font;
 }	
 
--(void)setTextColor:(UIColor *)color
-{
+- (void) setTextColor:(UIColor *)color {
 	self.internalTextView.textColor = color;
 }
 
--(UIColor*)textColor
-{
+- (UIColor *) textColor {
 	return self.internalTextView.textColor;
 }
 
--(void)setTextAlignment:(VKTextAlignment)aligment
-{
+- (void) setTextAlignment:(NSTextAlignment)aligment {
 	self.internalTextView.textAlignment = aligment;
 }
 
--(VKTextAlignment)textAlignment
-{
+- (NSTextAlignment) textAlignment {
 	return self.internalTextView.textAlignment;
 }
 
--(void)setSelectedRange:(NSRange)range
-{
+- (void) setSelectedRange:(NSRange)range {
 	self.internalTextView.selectedRange = range;
 }
 
--(NSRange)selectedRange
-{
+- (NSRange) selectedRange {
 	return self.internalTextView.selectedRange;
 }
 
--(void)setEditable:(BOOL)beditable
-{
+- (void) setEditable:(BOOL)beditable {
 	self.internalTextView.editable = beditable;
 }
 
--(BOOL)isEditable
-{
+- (BOOL) isEditable {
 	return self.internalTextView.editable;
 }
 
--(void)setReturnKeyType:(UIReturnKeyType)keyType
-{
+- (void) setReturnKeyType:(UIReturnKeyType)keyType {
 	self.internalTextView.returnKeyType = keyType;
 }
 
--(UIReturnKeyType)returnKeyType
-{
+- (UIReturnKeyType) returnKeyType {
 	return self.internalTextView.returnKeyType;
 }
 
--(void)setDataDetectorTypes:(UIDataDetectorTypes)datadetector
-{
+- (void) setDataDetectorTypes:(UIDataDetectorTypes)datadetector {
 	self.internalTextView.dataDetectorTypes = datadetector;
 }
 
--(UIDataDetectorTypes)dataDetectorTypes
-{
+- (UIDataDetectorTypes) dataDetectorTypes {
 	return self.internalTextView.dataDetectorTypes;
 }
 
-- (BOOL)hasText
-{
+- (BOOL) hasText {
 	return self.internalTextView.text.length > 0;
 }
 
-- (void)scrollRangeToVisible:(NSRange)range
-{
+- (void) scrollRangeToVisible:(NSRange)range {
 	[self.internalTextView scrollRangeToVisible:range];
 }
 
 #pragma mark -
 #pragma mark UIExpandingTextViewDelegate
 
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView 
-{
-	if ([self.delegate respondsToSelector:@selector(expandingTextViewShouldBeginEditing:)]) 
-    {
+- (BOOL) textViewShouldBeginEditing:(UITextView *)textView {
+	if ([self.delegate respondsToSelector:@selector(expandingTextViewShouldBeginEditing:)]) {
 		return [self.delegate expandingTextViewShouldBeginEditing:self];
-	} 
-    else 
-    {
-		return YES;
 	}
+    return YES;
 }
 
-- (BOOL)textViewShouldEndEditing:(UITextView *)textView 
-{
-	if ([self.delegate respondsToSelector:@selector(expandingTextViewShouldEndEditing:)]) 
-    {
+- (BOOL) textViewShouldEndEditing:(UITextView *)textView {
+	if ([self.delegate respondsToSelector:@selector(expandingTextViewShouldEndEditing:)]) {
 		return [self.delegate expandingTextViewShouldEndEditing:self];
-	} 
-    else 
-    {
-		return YES;
 	}
+    return YES;
 }
 
-- (void)textViewDidBeginEditing:(UITextView *)textView 
-{
-	if ([self.delegate respondsToSelector:@selector(expandingTextViewDidBeginEditing:)]) 
-    {
+- (void) textViewDidBeginEditing:(UITextView *)textView {
+	if ([self.delegate respondsToSelector:@selector(expandingTextViewDidBeginEditing:)]) {
 		[self.delegate expandingTextViewDidBeginEditing:self];
 	}
 }
 
-- (void)textViewDidEndEditing:(UITextView *)textView 
-{		
-	if ([self.delegate respondsToSelector:@selector(expandingTextViewDidEndEditing:)]) 
-    {
+- (void) textViewDidEndEditing:(UITextView *)textView  {
+	if ([self.delegate respondsToSelector:@selector(expandingTextViewDidEndEditing:)]) {
 		[self.delegate expandingTextViewDidEndEditing:self];
 	}
 }
 
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)atext 
-{
-	if(![textView hasText] && [atext isEqualToString:@""]) 
-    {
+- (BOOL) textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)atext {
+	if(![textView hasText] && [atext isEqualToString:@""]) {
         return NO;
 	}
     
-	if ([atext isEqualToString:@"\n"]) 
-    {
-		if ([self.delegate respondsToSelector:@selector(expandingTextViewShouldReturn:)]) 
-        {
-			if (![self.delegate performSelector:@selector(expandingTextViewShouldReturn:) withObject:self]) 
-            {
+	if ([atext isEqualToString:@"\n"]) {
+		if ([self.delegate respondsToSelector:@selector(expandingTextViewShouldReturn:)]) {
+			if (![self.delegate performSelector:@selector(expandingTextViewShouldReturn:) withObject:self]) {
 				return YES;
 			} 
-            else 
-            {
+            else {
 				[textView resignFirstResponder];
 				return NO;
 			}
@@ -665,10 +591,8 @@
 	return YES;
 }
 
-- (void)textViewDidChangeSelection:(UITextView *)textView 
-{
-	if ([self.delegate respondsToSelector:@selector(expandingTextViewDidChangeSelection:)]) 
-    {
+- (void)textViewDidChangeSelection:(UITextView *)textView {
+	if ([self.delegate respondsToSelector:@selector(expandingTextViewDidChangeSelection:)]) {
 		[self.delegate expandingTextViewDidChangeSelection:self];
 	}
 }

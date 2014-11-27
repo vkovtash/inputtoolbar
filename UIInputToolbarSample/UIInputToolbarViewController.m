@@ -66,7 +66,7 @@ view.userInteractionEnabled = YES;\
                     forControlEvents:UIControlEventTouchUpInside];
     
     /* Create toolbar */
-    self.inputToolbar = [[UIInputToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - kDefaultToolbarHeight, self.view.bounds.size.width, kDefaultToolbarHeight)
+    self.inputToolbar = [[ZIMInputToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - kDefaultToolbarHeight, self.view.bounds.size.width, kDefaultToolbarHeight)
                                                         label:@"Send"];
     
     self.inputToolbar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth;
@@ -120,7 +120,7 @@ view.userInteractionEnabled = YES;\
 - (IBAction)leftInputViewSwitchPressed:(UISwitch *)sender {
     if (sender.on) {
         inputToolbar.textView.leftView = self.leftInputButton;
-        inputToolbar.textView.leftViewVerticalAlign = UIExpandingTextViewVerticalAlignTop;
+        inputToolbar.textView.leftViewVerticalAlign = ZIMExpandingTextViewVerticalAlignTop;
     }
     else {
         inputToolbar.textView.leftView = nil;
@@ -178,14 +178,14 @@ view.userInteractionEnabled = YES;\
     [self.inputToolbar.textView resignFirstResponder];
 }
 
-- (void)inputButtonPressed:(UIInputToolbar *) toolbar {
+- (void)inputButtonPressed:(ZIMInputToolbar *) toolbar {
     /* Called when toolbar button is pressed */
     NSLog(@"Pressed button with text: '%@'", toolbar.textView.text);
     toolbar.textView.text = @"";
     [self.inputToolbar.textView resignFirstResponder];
 }
 
-- (void) plusButtonPressed:(UIInputToolbar *) toolbar {
+- (void) plusButtonPressed:(ZIMInputToolbar *) toolbar {
     NSLog(@"Plus button pressed");
 }
 @end
