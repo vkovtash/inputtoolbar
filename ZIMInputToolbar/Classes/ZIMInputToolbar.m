@@ -234,13 +234,13 @@ static CGFloat kToolbarEdgeSeparatorWidth = -12;
     r.origin.y += diff;
     r.size.height -= diff;
     
-    if ([self.inputDelegate respondsToSelector:@selector(inputToolbar:WillChangeHeight:)]) {
+    if ([self.inputDelegate respondsToSelector:@selector(inputToolbar:willChangeHeight:)]) {
         [self.inputDelegate inputToolbar:self willChangeHeight:r.size.height];
     }
     
     self.frame = r;
     
-    if ([self.inputDelegate respondsToSelector:@selector(inputToolbar:DidChangeHeight:)]) {
+    if ([self.inputDelegate respondsToSelector:@selector(inputToolbar:didChangeHeight:)]) {
         [self.inputDelegate inputToolbar:self didChangeHeight:self.frame.size.height];
     }
 }
