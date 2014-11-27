@@ -33,7 +33,7 @@
 
 @class ZIMInputToolbar;
 
-@protocol UIInputToolbarDelegate <NSObject>
+@protocol ZIMInputToolbarDelegate <NSObject>
 @optional
 - (void) inputButtonPressed:(ZIMInputToolbar *)toolbar;
 - (void) plusButtonPressed:(ZIMInputToolbar *)toolbar;
@@ -54,7 +54,7 @@
 @property (nonatomic, readonly) UIButton *inputButton;
 @property (nonatomic, readonly) UIButton *plusButton;
 @property (nonatomic, readonly) UIBarButtonItem *edgeSeparator;
-@property (nonatomic, weak) id <UIInputToolbarDelegate> inputDelegate;
+@property (nonatomic, weak) id <ZIMInputToolbarDelegate> inputDelegate;
 @property (nonatomic, assign) BOOL isPlusButtonVisible;
 @property (nonatomic, assign) BOOL animateHeightChanges;
 

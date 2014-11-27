@@ -26,7 +26,7 @@
 #import <UIKit/UIKit.h>
 #import "ZIMInputToolbar.h"
 
-@interface UIInputToolbarViewController : UIViewController <UIInputToolbarDelegate> {
+@interface UIInputToolbarViewController : UIViewController <ZIMInputToolbarDelegate> {
     ZIMInputToolbar *inputToolbar;
     
     @private
