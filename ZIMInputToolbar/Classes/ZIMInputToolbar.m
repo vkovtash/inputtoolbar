@@ -36,7 +36,6 @@ static CGFloat kToolbarEdgeSeparatorWidth = -8;
 static CGFloat kAnchorsWidth = 0;
 
 @interface ZIMInputToolbar()
-@property (nonatomic, strong) UIBarButtonItem *textInputItem;
 @property (nonatomic, assign) CGFloat touchBeginY;
 @property (nonatomic, strong) UIBarButtonItem *rightBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *leftBarButtonItem;
@@ -109,9 +108,8 @@ static CGFloat kAnchorsWidth = 0;
     _textView = [[ZIMExpandingTextView alloc] initWithFrame:self.bounds];
     _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     _textView.frame = CGRectOffset(self.textView.frame, 0, (self.bounds.size.height - self.textView.bounds.size.height) / 2);
-    
-    _textInputItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    _textInputItem.customView = self.textView;
+    _textView.clipsToBounds = YES;
+    [self addSubview:_textView];
     
     _leftTextAnchor = [[UIBarButtonItem alloc] initWithCustomView:[[UIView alloc] initWithFrame:CGRectMake(0, 0, kAnchorsWidth, self.bounds.size.height)]];
     _leftTextAnchor.customView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
@@ -121,10 +119,10 @@ static CGFloat kAnchorsWidth = 0;
     _rightTextAnchor.customView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     _rightTextAnchor.customView.backgroundColor = [UIColor redColor];
     
-    [self adjustVisibleItemsAnimated:NO];
-    
     self.textView.delegate = self;
     self.animateHeightChanges = YES;
+    
+    [self adjustVisibleItemsAnimated:NO];
 }
 
 - (UIButton *) plusButton {
@@ -168,6 +166,7 @@ static CGFloat kAnchorsWidth = 0;
     if (_isPlusButtonVisible != isPlusButtonVisible) {
         _isPlusButtonVisible = isPlusButtonVisible;
         [self adjustVisibleItemsAnimated:animated];
+        [self layoutExpandingTextViewAnimated:YES];
     }
 }
 
@@ -179,14 +178,25 @@ static CGFloat kAnchorsWidth = 0;
     if (_isInAlternativeMode != isInAlternativeMode) {
         _isInAlternativeMode = isInAlternativeMode;
         
-        [self adjustVisibleItemsAnimated:animated];
-        
         if (_isInAlternativeMode) {
             self.textBackup = self.textView.text;
             self.textView.text = @"";
         }
         else {
             self.textView.text = self.textBackup;
+        }
+        
+        void(^animations)() = ^{
+            [self adjustVisibleItemsAnimated:animated];
+            [self layoutExpandingTextViewAnimated:NO];
+            self.textView.alpha = _isInAlternativeMode ? 0 : 1;
+        };
+        
+        if (animated) {
+            [UIView animateWithDuration:0.2 animations:animations];
+        }
+        else {
+            animations();
         }
     }
 }
@@ -216,7 +226,7 @@ static CGFloat kAnchorsWidth = 0;
     i.origin.y = self.frame.size.height - i.size.height - 7;
     self.leftBarButtonItem.customView.frame = i;
     
-    [self layoutExpandingTextView];
+    [self layoutExpandingTextViewAnimated:NO];
 }
 
 - (void) inputButtonPressed {
@@ -241,13 +251,14 @@ static CGFloat kAnchorsWidth = 0;
         [barItems addObject:self.leftBarButtonItem];
     }
     
-    [barItems addObject:self.leftTextAnchor];
-    
     if (self.isInAlternativeMode) {
+        [barItems addObject:self.leftTextAnchor];
         [barItems addObjectsFromArray:self.alternativeBarButtonItems];
+        [barItems addObject:self.rightTextAnchor];
     }
     else {
-        [barItems addObject:self.textInputItem];
+        [barItems addObject:self.leftTextAnchor];
+        [barItems addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
         [barItems addObject:self.rightTextAnchor];
         [barItems addObject:self.rightBarButtonItem];
     }
@@ -255,22 +266,22 @@ static CGFloat kAnchorsWidth = 0;
     [barItems addObject:self.edgeSeparator];
     
     [self setItems:barItems animated:animated];
-
-    if (animated) {
-        [UIView animateWithDuration:0.2 animations:^{
-            [self layoutExpandingTextView];
-        }];
-    }
-    else {
-        [self layoutExpandingTextView];
-    }
 }
 
-- (void) layoutExpandingTextView {
-    CGRect frame = self.textView.frame;
-    frame.size.width = self.rightTextAnchor.customView.frame.origin.x - self.leftTextAnchor.customView.frame.origin.x;
-    frame.origin.x = self.leftTextAnchor.customView.frame.origin.x;
-    self.textView.frame = frame;
+- (void) layoutExpandingTextViewAnimated:(BOOL)animated {
+    void(^layout)() = ^{
+        CGRect frame = self.textView.frame;
+        frame.size.width = self.rightTextAnchor.customView.frame.origin.x - self.leftTextAnchor.customView.frame.origin.x;
+        frame.origin.x = self.leftTextAnchor.customView.frame.origin.x;
+        self.textView.frame = frame;
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:0.2 animations:layout];
+    }
+    else {
+        layout();
+    }
 }
 
 #pragma mark - UIExpandingTextView delegate
