@@ -31,9 +31,9 @@
 #import "ZIMInputToolbar.h"
 
 static CGFloat kDefaultButtonHeight = 26;
-static CGFloat kInputFieltMargin = 8;
 static NSString* const kInputButtonTitleSend = @"Send";
-static CGFloat kToolbarEdgeSeparatorWidth = -12;
+static CGFloat kToolbarEdgeSeparatorWidth = -8;
+static CGFloat kAnchorsWidth = 0;
 
 @interface ZIMInputToolbar()
 @property (nonatomic, strong) UIBarButtonItem *textInputItem;
@@ -41,6 +41,9 @@ static CGFloat kToolbarEdgeSeparatorWidth = -12;
 @property (nonatomic, strong) UIBarButtonItem *rightBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *leftBarButtonItem;
 @property (nonatomic, strong) NSString *maxInputButtonTitle;
+@property (strong, nonatomic) NSString *textBackup;
+@property (strong, nonatomic) UIBarButtonItem *leftTextAnchor;
+@property (strong, nonatomic) UIBarButtonItem *rightTextAnchor;
 @end
 
 @implementation ZIMInputToolbar
@@ -110,7 +113,15 @@ static CGFloat kToolbarEdgeSeparatorWidth = -12;
     _textInputItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     _textInputItem.customView = self.textView;
     
-    [self adjustVisibleItems];
+    _leftTextAnchor = [[UIBarButtonItem alloc] initWithCustomView:[[UIView alloc] initWithFrame:CGRectMake(0, 0, kAnchorsWidth, self.bounds.size.height)]];
+    _leftTextAnchor.customView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+    _leftTextAnchor.customView.backgroundColor = [UIColor redColor];
+    
+    _rightTextAnchor = [[UIBarButtonItem alloc] initWithCustomView:[[UIView alloc] initWithFrame:CGRectMake(0, 0, kAnchorsWidth, self.bounds.size.height)]];
+    _rightTextAnchor.customView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+    _rightTextAnchor.customView.backgroundColor = [UIColor redColor];
+    
+    [self adjustVisibleItemsAnimated:NO];
     
     self.textView.delegate = self;
     self.animateHeightChanges = YES;
@@ -120,9 +131,9 @@ static CGFloat kToolbarEdgeSeparatorWidth = -12;
     if (!_plusButton) {
         _plusButton = [UIButton buttonWithType:UIButtonTypeSystem];
         [_plusButton setTitle:@"+" forState:UIControlStateNormal];
-        _plusButton.bounds = CGRectMake(0, 0, _inputButton.bounds.size.height, _inputButton.bounds.size.height);
-        _plusButton.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 8, 0);
         _plusButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Thin" size:35];
+        _plusButton.bounds = CGRectMake(0, 0, 18, kDefaultButtonHeight);
+        _plusButton.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 8, 0);
     }
     return _plusButton;
 }
@@ -150,10 +161,42 @@ static CGFloat kToolbarEdgeSeparatorWidth = -12;
 }
 
 - (void) setIsPlusButtonVisible:(BOOL)isPlusButtonVisible {
+    [self setIsPlusButtonVisible:isPlusButtonVisible animated:NO];
+}
+
+- (void) setIsPlusButtonVisible:(BOOL)isPlusButtonVisible animated:(BOOL)animated {
     if (_isPlusButtonVisible != isPlusButtonVisible) {
         _isPlusButtonVisible = isPlusButtonVisible;
-        [self adjustVisibleItems];
+        [self adjustVisibleItemsAnimated:animated];
     }
+}
+
+- (void) setIsInAlternativeMode:(BOOL)isInAlternativeMode {
+    [self setIsInAlternativeMode:isInAlternativeMode animated:NO];
+}
+
+- (void) setIsInAlternativeMode:(BOOL)isInAlternativeMode animated:(BOOL)animated {
+    if (_isInAlternativeMode != isInAlternativeMode) {
+        _isInAlternativeMode = isInAlternativeMode;
+        
+        [self adjustVisibleItemsAnimated:animated];
+        
+        if (_isInAlternativeMode) {
+            self.textBackup = self.textView.text;
+            self.textView.text = @"";
+        }
+        else {
+            self.textView.text = self.textBackup;
+        }
+    }
+}
+
+- (void) setAnimateHeightChanges:(BOOL)animateHeightChanges {
+    self.textView.animateHeightChange = animateHeightChanges;
+}
+
+- (BOOL) animateHeightChanges {
+    return self.textView.animateHeightChange;
 }
 
 - (void) tintColorDidChange {
@@ -173,7 +216,7 @@ static CGFloat kToolbarEdgeSeparatorWidth = -12;
     i.origin.y = self.frame.size.height - i.size.height - 7;
     self.leftBarButtonItem.customView.frame = i;
     
-    self.textView.animateHeightChange = self.animateHeightChanges;
+    [self layoutExpandingTextView];
 }
 
 - (void) inputButtonPressed {
@@ -189,39 +232,44 @@ static CGFloat kToolbarEdgeSeparatorWidth = -12;
     }
 }
 
-- (void) adjustVisibleItems {
+- (void) adjustVisibleItemsAnimated:(BOOL)animated {
+    NSMutableArray *barItems = [NSMutableArray array];
+    
+    [barItems addObject:self.edgeSeparator];
+    
     if (self.isPlusButtonVisible) {
-        [self setItems:@[self.edgeSeparator, self.leftBarButtonItem, self.textInputItem, self.rightBarButtonItem, self.edgeSeparator]
-              animated:NO];
+        [barItems addObject:self.leftBarButtonItem];
+    }
+    
+    [barItems addObject:self.leftTextAnchor];
+    
+    if (self.isInAlternativeMode) {
+        [barItems addObjectsFromArray:self.alternativeBarButtonItems];
     }
     else {
-        [self setItems:@[self.edgeSeparator, self.textInputItem, self.rightBarButtonItem, self.edgeSeparator]
-              animated:NO];
+        [barItems addObject:self.textInputItem];
+        [barItems addObject:self.rightTextAnchor];
+        [barItems addObject:self.rightBarButtonItem];
     }
-    [self layoutExpandingTextView];
+    
+    [barItems addObject:self.edgeSeparator];
+    
+    [self setItems:barItems animated:animated];
+
+    if (animated) {
+        [UIView animateWithDuration:0.2 animations:^{
+            [self layoutExpandingTextView];
+        }];
+    }
+    else {
+        [self layoutExpandingTextView];
+    }
 }
 
 - (void) layoutExpandingTextView {
     CGRect frame = self.textView.frame;
-    frame.size.width = self.bounds.size.width;
-    frame.origin.x = 0;
-    
-    BOOL calculatePosition = YES;
-    
-    for (UIBarButtonItem *item in self.items) {
-        if ([item.customView isKindOfClass:[ZIMExpandingTextView class]]) {
-            calculatePosition = NO;
-        }
-        else if (item.customView){
-            if (calculatePosition) {
-                frame.origin.x += item.width ? item.width : item.customView.frame.size.width;
-            }
-            frame.size.width -= item.width + item.customView.frame.size.width;
-        }
-    }
-    
-    frame.size.width -= kInputFieltMargin * 2;
-    frame.origin.x += kInputFieltMargin;
+    frame.size.width = self.rightTextAnchor.customView.frame.origin.x - self.leftTextAnchor.customView.frame.origin.x;
+    frame.origin.x = self.leftTextAnchor.customView.frame.origin.x;
     self.textView.frame = frame;
 }
 

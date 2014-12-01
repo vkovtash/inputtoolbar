@@ -74,6 +74,17 @@ view.userInteractionEnabled = YES;\
     inputToolbar.inputDelegate = self;
     inputToolbar.textView.placeholder = @"Placeholder";
     inputToolbar.textView.maximumNumberOfLines = 4;
+    
+    UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    space.width = 15;
+    
+    inputToolbar.alternativeBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:nil action:nil],
+                                               space,
+                                               [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:nil action:nil],
+                                               space,
+                                               [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:nil action:nil],
+                                               ];
+    
     handle_tap(self.view, self, @selector(dismissToolbar:));
 }
 
@@ -104,8 +115,8 @@ view.userInteractionEnabled = YES;\
     }
 }
 
-- (IBAction)rightButtonSwitchChanged:(UISwitch *)sender {
-    self.inputToolbar.isPlusButtonVisible = sender.on;
+- (IBAction)leftButtonSwitchChanged:(UISwitch *)sender {
+    [self.inputToolbar setIsPlusButtonVisible:sender.isOn animated:YES];
 }
 
 - (IBAction)rightInputViewSwitchChanged:(UISwitch *)sender {
@@ -144,6 +155,10 @@ view.userInteractionEnabled = YES;\
         default:
             break;
     }
+}
+
+- (IBAction)alternativeModeSwitchChanged:(UISwitch *)sender {
+    [inputToolbar setIsInAlternativeMode:sender.isOn animated:YES];
 }
 
 

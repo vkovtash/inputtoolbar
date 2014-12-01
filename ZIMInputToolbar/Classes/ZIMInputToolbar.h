@@ -53,11 +53,16 @@
 @property (nonatomic, readonly) ZIMExpandingTextView *textView;
 @property (nonatomic, readonly) UIButton *inputButton;
 @property (nonatomic, readonly) UIButton *plusButton;
+@property (nonatomic, strong) NSArray *alternativeBarButtonItems;
 @property (nonatomic, readonly) UIBarButtonItem *edgeSeparator;
 @property (nonatomic, weak) id <ZIMInputToolbarDelegate> inputDelegate;
 @property (nonatomic, assign) BOOL isPlusButtonVisible;
 @property (nonatomic, assign) BOOL animateHeightChanges;
+@property (nonatomic, assign) BOOL isInAlternativeMode;
 
 - (instancetype) initWithFrame:(CGRect)frame label:(NSString *)label;
 - (instancetype) initWithFrame:(CGRect)frame label:(NSString *)label possibleLabels:(NSSet *)possibleLabels;
+
+- (void) setIsInAlternativeMode:(BOOL)isInAlternativeMode animated:(BOOL)animated;
+- (void) setIsPlusButtonVisible:(BOOL)isPlusButtonVisible animated:(BOOL)animated;
 @end

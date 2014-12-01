@@ -20,7 +20,7 @@
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1SE-Vx-RtE">
                                 <rect key="frame" x="245" y="28" width="51" height="31"/>
                                 <connections>
-                                    <action selector="rightButtonSwitchChanged:" destination="aj7-6d-Vcm" eventType="valueChanged" id="e7L-mw-Ajj"/>
+                                    <action selector="leftButtonSwitchChanged:" destination="aj7-6d-Vcm" eventType="valueChanged" id="yiq-rI-pRm"/>
                                 </connections>
                             </switch>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="SPo-zR-cMr">
@@ -70,21 +70,41 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="gHS-Ij-3s5">
+                                <rect key="frame" x="245" y="223" width="51" height="31"/>
+                                <connections>
+                                    <action selector="alternativeModeSwitchChanged:" destination="aj7-6d-Vcm" eventType="valueChanged" id="W2V-aS-G5h"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Alternative mode" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ydf-1s-NUN">
+                                <rect key="frame" x="16" y="228" width="221" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="19" id="n7i-Ue-MGE"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="k1c-VL-HLS" firstAttribute="centerY" secondItem="1SE-Vx-RtE" secondAttribute="centerY" id="3gA-B1-E2o"/>
+                            <constraint firstItem="gHS-Ij-3s5" firstAttribute="leading" secondItem="ydf-1s-NUN" secondAttribute="trailing" constant="8" id="5W6-gG-ft0"/>
                             <constraint firstAttribute="trailing" secondItem="bWp-Aa-SdH" secondAttribute="trailing" constant="37" id="7ej-mH-z9i"/>
                             <constraint firstItem="1SE-Vx-RtE" firstAttribute="top" secondItem="zKo-Vd-HxA" secondAttribute="bottom" constant="8" id="8rr-ke-44p"/>
                             <constraint firstItem="SPo-zR-cMr" firstAttribute="top" secondItem="1SE-Vx-RtE" secondAttribute="bottom" constant="8" id="A5G-ex-zzz"/>
                             <constraint firstItem="bWp-Aa-SdH" firstAttribute="top" secondItem="xCG-7l-3Su" secondAttribute="bottom" constant="8" id="DK8-H4-3IM"/>
                             <constraint firstItem="YVS-4X-Lxy" firstAttribute="centerY" secondItem="CdK-32-Q0N" secondAttribute="centerY" id="HZy-VW-JOO"/>
+                            <constraint firstAttribute="trailing" secondItem="gHS-Ij-3s5" secondAttribute="trailing" constant="26" id="Hbr-pz-gNT"/>
                             <constraint firstItem="SPo-zR-cMr" firstAttribute="leading" secondItem="Fas-V3-g3I" secondAttribute="trailing" constant="8" id="Jy9-pF-RJi"/>
                             <constraint firstItem="Fas-V3-g3I" firstAttribute="leading" secondItem="J2p-Ej-Viz" secondAttribute="leading" constant="16" id="K0o-Fb-1es"/>
                             <constraint firstItem="CdK-32-Q0N" firstAttribute="top" secondItem="SPo-zR-cMr" secondAttribute="bottom" constant="8" id="TJg-Dy-GaQ"/>
                             <constraint firstAttribute="trailing" secondItem="xCG-7l-3Su" secondAttribute="trailing" constant="16" id="V0b-Lc-Ue3"/>
                             <constraint firstAttribute="trailing" secondItem="SPo-zR-cMr" secondAttribute="trailing" constant="26" id="Y7t-w5-YkX"/>
                             <constraint firstItem="xCG-7l-3Su" firstAttribute="top" secondItem="CdK-32-Q0N" secondAttribute="bottom" constant="12" id="Ynd-Vu-KIG"/>
+                            <constraint firstItem="gHS-Ij-3s5" firstAttribute="centerY" secondItem="ydf-1s-NUN" secondAttribute="centerY" id="ZkY-L4-hJ5"/>
+                            <constraint firstItem="gHS-Ij-3s5" firstAttribute="top" secondItem="bWp-Aa-SdH" secondAttribute="bottom" constant="18" id="bJg-2K-iIJ"/>
+                            <constraint firstItem="ydf-1s-NUN" firstAttribute="leading" secondItem="J2p-Ej-Viz" secondAttribute="leading" constant="16" id="bbX-jp-IkR"/>
                             <constraint firstItem="k1c-VL-HLS" firstAttribute="leading" secondItem="J2p-Ej-Viz" secondAttribute="leading" constant="16" id="fhR-tW-XFc"/>
                             <constraint firstItem="xCG-7l-3Su" firstAttribute="leading" secondItem="J2p-Ej-Viz" secondAttribute="leading" constant="16" id="g43-DS-TGu"/>
                             <constraint firstItem="Fas-V3-g3I" firstAttribute="centerY" secondItem="SPo-zR-cMr" secondAttribute="centerY" id="gzO-K7-udE"/>
@@ -99,7 +119,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nwt-sa-LUo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-149" y="370"/>
+            <point key="canvasLocation" x="-149" y="369"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
