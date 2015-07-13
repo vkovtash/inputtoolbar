@@ -1,5 +1,5 @@
 /*
- *  UIInputToolbarSampleAppDelegate.m
+ *  UIInputToolbarViewController.h
  *  
  *  Created by Brandon Hamilton on 2011/05/03.
  *  Copyright 2011 Brandon Hamilton.
@@ -23,20 +23,15 @@
  *  THE SOFTWARE.
  */
 
-#import "UIInputToolbarSampleAppDelegate.h"
+#import <UIKit/UIKit.h>
+#import "ZIMInputToolbar.h"
 
-@implementation UIInputToolbarSampleAppDelegate
-
-
-@synthesize window=_window;
-@synthesize viewController;
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    self.viewController = [[UIInputToolbarViewController alloc] init];
-    [self.window setRootViewController:self.viewController];
-    [self.window makeKeyAndVisible];
-    return YES;
+@interface UIInputToolbarViewController : UIViewController <ZIMInputToolbarDelegate> {
+    ZIMInputToolbar *inputToolbar;
+    
+    @private
+    BOOL keyboardIsVisible;
 }
 
+@property (nonatomic, strong) ZIMInputToolbar *inputToolbar;
 @end

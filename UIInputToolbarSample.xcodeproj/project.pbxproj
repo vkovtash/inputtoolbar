@@ -7,32 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C05D8F1317A0049E00632A60 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C05D8F1217A0049E00632A60 /* Default-568h@2x.png */; };
-		CA0C9C30137879DA0097DB28 /* UIExpandingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0C9C27137879DA0097DB28 /* UIExpandingTextView.m */; };
-		CA0C9C33137879DA0097DB28 /* UIInputToolbarSampleAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0C9C2D137879DA0097DB28 /* UIInputToolbarSampleAppDelegate.m */; };
 		CA3A7B9213708CDE00CF5E6B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA3A7B9113708CDE00CF5E6B /* UIKit.framework */; };
 		CA3A7B9413708CDE00CF5E6B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA3A7B9313708CDE00CF5E6B /* Foundation.framework */; };
 		CA3A7B9613708CDE00CF5E6B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA3A7B9513708CDE00CF5E6B /* CoreGraphics.framework */; };
 		CA3A7B9C13708CDE00CF5E6B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CA3A7B9A13708CDE00CF5E6B /* InfoPlist.strings */; };
 		CA3A7B9F13708CDE00CF5E6B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CA3A7B9E13708CDE00CF5E6B /* main.m */; };
-		CA3A7BA513708CDF00CF5E6B /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = CA3A7BA313708CDF00CF5E6B /* MainWindow.xib */; };
-		CADA5F07137891FD0046E8AA /* UIInputToolbarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CADA5F06137891FD0046E8AA /* UIInputToolbarViewController.m */; };
-		F3D3643C17F47146002CC857 /* textbg_7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F3D3643B17F47146002CC857 /* textbg_7@2x.png */; };
-		F3D3643F17F5B194002CC857 /* UIInputToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D3643D17F5B194002CC857 /* UIInputToolbar.m */; };
-		FF4851E815C67D47003829EC /* buttonbg.png in Resources */ = {isa = PBXBuildFile; fileRef = FF4851E215C67D47003829EC /* buttonbg.png */; };
-		FF4851E915C67D47003829EC /* buttonbg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FF4851E315C67D47003829EC /* buttonbg@2x.png */; };
-		FF4851EA15C67D47003829EC /* textbg.png in Resources */ = {isa = PBXBuildFile; fileRef = FF4851E415C67D47003829EC /* textbg.png */; };
-		FF4851EB15C67D47003829EC /* textbg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FF4851E515C67D47003829EC /* textbg@2x.png */; };
-		FF4851EC15C67D47003829EC /* toolbarbg.png in Resources */ = {isa = PBXBuildFile; fileRef = FF4851E615C67D47003829EC /* toolbarbg.png */; };
-		FF4851ED15C67D47003829EC /* toolbarbg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FF4851E715C67D47003829EC /* toolbarbg@2x.png */; };
+		F3450E3D1A24A31D0035EED3 /* UIInputToolbarAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F3450E3C1A24A31D0035EED3 /* UIInputToolbarAppDelegate.m */; };
+		F3450E961A2753430035EED3 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F3450E921A2753430035EED3 /* Default-568h@2x.png */; };
+		F3450E971A2753430035EED3 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F3450E931A2753430035EED3 /* Main_iPhone.storyboard */; };
+		F3450E981A2753430035EED3 /* UIInputToolbarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3450E951A2753430035EED3 /* UIInputToolbarViewController.m */; };
+		F3450EA71A27534F0035EED3 /* ZIMInputToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = F3450E9C1A27534F0035EED3 /* ZIMInputToolbar.m */; };
+		F3450EA81A27534F0035EED3 /* ZIMExpandingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = F3450E9E1A27534F0035EED3 /* ZIMExpandingTextView.m */; };
+		F3450EAD1A27534F0035EED3 /* textbg_7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F3450EA41A27534F0035EED3 /* textbg_7@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		C05D8F1217A0049E00632A60 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		CA0C9C26137879DA0097DB28 /* UIExpandingTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIExpandingTextView.h; sourceTree = "<group>"; };
-		CA0C9C27137879DA0097DB28 /* UIExpandingTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIExpandingTextView.m; sourceTree = "<group>"; };
-		CA0C9C2C137879DA0097DB28 /* UIInputToolbarSampleAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIInputToolbarSampleAppDelegate.h; sourceTree = "<group>"; };
-		CA0C9C2D137879DA0097DB28 /* UIInputToolbarSampleAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIInputToolbarSampleAppDelegate.m; sourceTree = "<group>"; };
 		CA3A7B8D13708CDE00CF5E6B /* UIInputToolbarSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UIInputToolbarSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA3A7B9113708CDE00CF5E6B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		CA3A7B9313708CDE00CF5E6B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -41,18 +30,17 @@
 		CA3A7B9B13708CDE00CF5E6B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CA3A7B9D13708CDE00CF5E6B /* UIInputToolbarSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIInputToolbarSample-Prefix.pch"; sourceTree = "<group>"; };
 		CA3A7B9E13708CDE00CF5E6B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		CA3A7BA413708CDF00CF5E6B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		CADA5F05137891FD0046E8AA /* UIInputToolbarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIInputToolbarViewController.h; sourceTree = "<group>"; };
-		CADA5F06137891FD0046E8AA /* UIInputToolbarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIInputToolbarViewController.m; sourceTree = "<group>"; };
-		F3D3643B17F47146002CC857 /* textbg_7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "textbg_7@2x.png"; path = "Resources/textbg_7@2x.png"; sourceTree = "<group>"; };
-		F3D3643D17F5B194002CC857 /* UIInputToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIInputToolbar.m; sourceTree = "<group>"; };
-		F3D3643E17F5B194002CC857 /* UIInputToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIInputToolbar.h; sourceTree = "<group>"; };
-		FF4851E215C67D47003829EC /* buttonbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = buttonbg.png; path = Resources/buttonbg.png; sourceTree = "<group>"; };
-		FF4851E315C67D47003829EC /* buttonbg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "buttonbg@2x.png"; path = "Resources/buttonbg@2x.png"; sourceTree = "<group>"; };
-		FF4851E415C67D47003829EC /* textbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = textbg.png; path = Resources/textbg.png; sourceTree = "<group>"; };
-		FF4851E515C67D47003829EC /* textbg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "textbg@2x.png"; path = "Resources/textbg@2x.png"; sourceTree = "<group>"; };
-		FF4851E615C67D47003829EC /* toolbarbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbarbg.png; path = Resources/toolbarbg.png; sourceTree = "<group>"; };
-		FF4851E715C67D47003829EC /* toolbarbg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "toolbarbg@2x.png"; path = "Resources/toolbarbg@2x.png"; sourceTree = "<group>"; };
+		F3450E3B1A24A31D0035EED3 /* UIInputToolbarAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIInputToolbarAppDelegate.h; sourceTree = "<group>"; };
+		F3450E3C1A24A31D0035EED3 /* UIInputToolbarAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIInputToolbarAppDelegate.m; sourceTree = "<group>"; };
+		F3450E921A2753430035EED3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		F3450E931A2753430035EED3 /* Main_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPhone.storyboard; sourceTree = "<group>"; };
+		F3450E941A2753430035EED3 /* UIInputToolbarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIInputToolbarViewController.h; sourceTree = "<group>"; };
+		F3450E951A2753430035EED3 /* UIInputToolbarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIInputToolbarViewController.m; sourceTree = "<group>"; };
+		F3450E9B1A27534F0035EED3 /* ZIMInputToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZIMInputToolbar.h; sourceTree = "<group>"; };
+		F3450E9C1A27534F0035EED3 /* ZIMInputToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZIMInputToolbar.m; sourceTree = "<group>"; };
+		F3450E9D1A27534F0035EED3 /* ZIMExpandingTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZIMExpandingTextView.h; sourceTree = "<group>"; };
+		F3450E9E1A27534F0035EED3 /* ZIMExpandingTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZIMExpandingTextView.m; sourceTree = "<group>"; };
+		F3450EA41A27534F0035EED3 /* textbg_7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "textbg_7@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,34 +57,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		CA0C9C24137879DA0097DB28 /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				CA0C9C25137879DA0097DB28 /* UIInputToolbar */,
-				CA0C9C2C137879DA0097DB28 /* UIInputToolbarSampleAppDelegate.h */,
-				CA0C9C2D137879DA0097DB28 /* UIInputToolbarSampleAppDelegate.m */,
-				CADA5F05137891FD0046E8AA /* UIInputToolbarViewController.h */,
-				CADA5F06137891FD0046E8AA /* UIInputToolbarViewController.m */,
-			);
-			name = Classes;
-			path = UIInputToolbarSample/Classes;
-			sourceTree = SOURCE_ROOT;
-		};
-		CA0C9C25137879DA0097DB28 /* UIInputToolbar */ = {
-			isa = PBXGroup;
-			children = (
-				F3D3643E17F5B194002CC857 /* UIInputToolbar.h */,
-				F3D3643D17F5B194002CC857 /* UIInputToolbar.m */,
-				CA0C9C26137879DA0097DB28 /* UIExpandingTextView.h */,
-				CA0C9C27137879DA0097DB28 /* UIExpandingTextView.m */,
-			);
-			path = UIInputToolbar;
-			sourceTree = "<group>";
-		};
 		CA3A7B8213708CDE00CF5E6B = {
 			isa = PBXGroup;
 			children = (
-				C05D8F1217A0049E00632A60 /* Default-568h@2x.png */,
 				CA3A7B9713708CDE00CF5E6B /* UIInputToolbarSample */,
 				CA3A7B9013708CDE00CF5E6B /* Frameworks */,
 				CA3A7B8E13708CDE00CF5E6B /* Products */,
@@ -124,9 +87,14 @@
 		CA3A7B9713708CDE00CF5E6B /* UIInputToolbarSample */ = {
 			isa = PBXGroup;
 			children = (
-				CA0C9C24137879DA0097DB28 /* Classes */,
-				CA3A7BAC13708CF700CF5E6B /* Resources */,
+				F3450E991A27534F0035EED3 /* ZIMInputToolbar */,
+				F3450E921A2753430035EED3 /* Default-568h@2x.png */,
+				F3450E931A2753430035EED3 /* Main_iPhone.storyboard */,
+				F3450E941A2753430035EED3 /* UIInputToolbarViewController.h */,
+				F3450E951A2753430035EED3 /* UIInputToolbarViewController.m */,
 				CA3A7B9813708CDE00CF5E6B /* Supporting Files */,
+				F3450E3B1A24A31D0035EED3 /* UIInputToolbarAppDelegate.h */,
+				F3450E3C1A24A31D0035EED3 /* UIInputToolbarAppDelegate.m */,
 			);
 			path = UIInputToolbarSample;
 			sourceTree = "<group>";
@@ -142,19 +110,32 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		CA3A7BAC13708CF700CF5E6B /* Resources */ = {
+		F3450E991A27534F0035EED3 /* ZIMInputToolbar */ = {
 			isa = PBXGroup;
 			children = (
-				F3D3643B17F47146002CC857 /* textbg_7@2x.png */,
-				FF4851E215C67D47003829EC /* buttonbg.png */,
-				FF4851E315C67D47003829EC /* buttonbg@2x.png */,
-				FF4851E415C67D47003829EC /* textbg.png */,
-				FF4851E515C67D47003829EC /* textbg@2x.png */,
-				FF4851E615C67D47003829EC /* toolbarbg.png */,
-				FF4851E715C67D47003829EC /* toolbarbg@2x.png */,
-				CA3A7BA313708CDF00CF5E6B /* MainWindow.xib */,
+				F3450E9A1A27534F0035EED3 /* Classes */,
+				F3450E9F1A27534F0035EED3 /* Resources */,
 			);
-			name = Resources;
+			path = ZIMInputToolbar;
+			sourceTree = SOURCE_ROOT;
+		};
+		F3450E9A1A27534F0035EED3 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				F3450E9B1A27534F0035EED3 /* ZIMInputToolbar.h */,
+				F3450E9C1A27534F0035EED3 /* ZIMInputToolbar.m */,
+				F3450E9D1A27534F0035EED3 /* ZIMExpandingTextView.h */,
+				F3450E9E1A27534F0035EED3 /* ZIMExpandingTextView.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		F3450E9F1A27534F0035EED3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F3450EA41A27534F0035EED3 /* textbg_7@2x.png */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -183,7 +164,7 @@
 		CA3A7B8413708CDE00CF5E6B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0610;
 			};
 			buildConfigurationList = CA3A7B8713708CDE00CF5E6B /* Build configuration list for PBXProject "UIInputToolbarSample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -207,16 +188,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3450EAD1A27534F0035EED3 /* textbg_7@2x.png in Resources */,
 				CA3A7B9C13708CDE00CF5E6B /* InfoPlist.strings in Resources */,
-				CA3A7BA513708CDF00CF5E6B /* MainWindow.xib in Resources */,
-				FF4851E815C67D47003829EC /* buttonbg.png in Resources */,
-				FF4851E915C67D47003829EC /* buttonbg@2x.png in Resources */,
-				FF4851EA15C67D47003829EC /* textbg.png in Resources */,
-				FF4851EB15C67D47003829EC /* textbg@2x.png in Resources */,
-				F3D3643C17F47146002CC857 /* textbg_7@2x.png in Resources */,
-				FF4851EC15C67D47003829EC /* toolbarbg.png in Resources */,
-				FF4851ED15C67D47003829EC /* toolbarbg@2x.png in Resources */,
-				C05D8F1317A0049E00632A60 /* Default-568h@2x.png in Resources */,
+				F3450E961A2753430035EED3 /* Default-568h@2x.png in Resources */,
+				F3450E971A2753430035EED3 /* Main_iPhone.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,11 +202,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F3D3643F17F5B194002CC857 /* UIInputToolbar.m in Sources */,
+				F3450EA71A27534F0035EED3 /* ZIMInputToolbar.m in Sources */,
 				CA3A7B9F13708CDE00CF5E6B /* main.m in Sources */,
-				CA0C9C30137879DA0097DB28 /* UIExpandingTextView.m in Sources */,
-				CA0C9C33137879DA0097DB28 /* UIInputToolbarSampleAppDelegate.m in Sources */,
-				CADA5F07137891FD0046E8AA /* UIInputToolbarViewController.m in Sources */,
+				F3450E981A2753430035EED3 /* UIInputToolbarViewController.m in Sources */,
+				F3450E3D1A24A31D0035EED3 /* UIInputToolbarAppDelegate.m in Sources */,
+				F3450EA81A27534F0035EED3 /* ZIMExpandingTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,21 +221,12 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		CA3A7BA313708CDF00CF5E6B /* MainWindow.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CA3A7BA413708CDF00CF5E6B /* en */,
-			);
-			name = MainWindow.xib;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		CA3A7BA613708CDF00CF5E6B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -271,6 +237,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -278,7 +245,6 @@
 		CA3A7BA713708CDF00CF5E6B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -302,7 +268,7 @@
 				GCC_PREFIX_HEADER = "UIInputToolbarSample/UIInputToolbarSample-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "UIInputToolbarSample/UIInputToolbarSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -318,7 +284,7 @@
 				GCC_PREFIX_HEADER = "UIInputToolbarSample/UIInputToolbarSample-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "UIInputToolbarSample/UIInputToolbarSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
