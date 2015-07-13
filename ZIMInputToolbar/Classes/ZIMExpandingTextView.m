@@ -57,7 +57,6 @@
 
 @synthesize internalTextView = _internalTextView;
 @synthesize text = _text;
-@synthesize cleanText = _cleanText;
 @synthesize font = _font;
 @synthesize textColor = _textColor;
 @synthesize textAlignment = _textAlignment;
@@ -489,14 +488,10 @@
     if (atext) {
         self.internalTextView.attributedText = [[NSAttributedString alloc] initWithString:atext];
         [self performSelector:@selector(textViewDidChange:) withObject:self.internalTextView];
-        self.cleanText = self.internalTextView.attributedText.string;
     }
 }
 
 - (void)appendObjectFromString:(NSString *)string {
-    
-    self.cleanText = [self.cleanText stringByAppendingString:string];
-    
     UIImage *image = [self imageFromString:string];
     InlineTextAttachment *attch = [[InlineTextAttachment alloc] initWithData:nil ofType:nil];
     UIFont *font = self.internalTextView.font;
