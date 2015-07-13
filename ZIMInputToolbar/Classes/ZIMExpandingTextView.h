@@ -67,6 +67,7 @@ typedef NS_ENUM(int16_t, ZIMExpandingTextViewVerticalAlign) {
 @property (nonatomic, weak) NSObject<ZIMExpandingTextViewDelegate> *delegate;
 @property (nonatomic, strong) UITextView *internalTextView;
 @property (nonatomic, strong) NSString *text;
+@property (nonatomic, strong) NSString *cleanText;
 @property (nonatomic, strong) UIFont *font;
 @property (nonatomic, strong) UIColor *textColor;
 @property (nonatomic) NSTextAlignment textAlignment;
@@ -92,5 +93,7 @@ typedef NS_ENUM(int16_t, ZIMExpandingTextViewVerticalAlign) {
 - (BOOL) hasText;
 - (void) scrollRangeToVisible:(NSRange)range;
 - (void) clearText;
+- (void) appendObjectFromString:(NSString *)string;
+- (void) substringToRange:(NSRange)range;
 
 @end
