@@ -562,28 +562,15 @@
 }
 
 - (void) setTextColor:(UIColor *)color {
-    NSMutableAttributedString *str = self.internalTextView.attributedText;
-    [str removeAttribute:NSForegroundColorAttributeName range:NSMakeRange(0, self.internalTextView.attributedText.length)];
-    [str setAttributes:@{NSForegroundColorAttributeName: color} range:NSMakeRange(0, self.internalTextView.attributedText.length)];
-    self.internalTextView.attributedText = [str copy];
+    self.internalTextView.textColor = color;
 }
 
 - (UIColor *) textColor {
-    NSRange range = NSMakeRange(0, 1);
-    UIColor  *textColor = [self.internalTextView.attributedText attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:&range];
-    return textColor;
+    return self.internalTextView.textColor;
 }
 
 - (void)setTextAlignment:(NSTextAlignment)aligment {
-    NSRange range = NSMakeRange(0, 1);
-    NSMutableAttributedString *str = self.internalTextView.attributedText;
-    NSParagraphStyle *textstyle = [str attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:&range];
-    NSMutableParagraphStyle *newTextStyle = textstyle;
-    newTextStyle.alignment = aligment;
-    
-    [str removeAttribute:NSParagraphStyleAttributeName range:NSMakeRange(0, self.internalTextView.attributedText.length)];
-    [str setAttributes:@{NSParagraphStyleAttributeName: newTextStyle} range:NSMakeRange(0, self.internalTextView.attributedText.length)];
-    self.internalTextView.attributedText = [str copy];
+    self.internalTextView.textAlignment = aligment;
 }
 
 - (NSTextAlignment) textAlignment {
