@@ -491,28 +491,30 @@
     }
 }
 
-- (void)appendObjectFromString:(NSString *)string {
-    UIImage *image = [self imageFromString:string];
+- (void) replaceString:(NSString *)str withObjectFromString:(NSString *)stringToConvert {
+    NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithAttributedString:self.internalTextView.attributedText];
+    NSRange range = [self.internalTextView.attributedText.string rangeOfString:str options: NSBackwardsSearch];
+    [[attrText mutableString] replaceOccurrencesOfString:str withString:@"" options:NSCaseInsensitiveSearch range:range];
+    UIImage *image = [self imageFromString:stringToConvert];
     InlineTextAttachment *attch = [[InlineTextAttachment alloc] initWithData:nil ofType:nil];
     UIFont *font = self.internalTextView.font;
     attch.fontDescender = font.descender;
     attch.image = image;
-    attch.realText = string;
-    NSAttributedString *attachmentLock = [NSAttributedString attributedStringWithAttachment:attch];
-    NSMutableAttributedString *lockString = [[NSMutableAttributedString alloc] initWithAttributedString:self.internalTextView.attributedText];
-    [lockString appendAttributedString:attachmentLock];
-    self.internalTextView.attributedText = [lockString copy];
+    attch.realText = [@"@" stringByAppendingString:stringToConvert];
+    NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:attch];
+    [attrText appendAttributedString:attachmentString];
+    self.internalTextView.attributedText = [attrText copy];
     [self performSelector:@selector(textViewDidChange:) withObject:self.internalTextView];
 }
 
 - (UIImage *)imageFromString:(NSString *)string
 {
-    UIFont* font = [UIFont boldSystemFontOfSize:12.0f];
-    CGSize size = [string sizeWithFont:font];
+    NSDictionary *attrDict = [NSDictionary dictionaryWithObject:[UIFont boldSystemFontOfSize:12.0f] forKey:NSFontAttributeName];
+    CGSize size = [string sizeWithAttributes:attrDict];
     // Create a bitmap context into which the text will be rendered.
     UIGraphicsBeginImageContext(size);
     // Render the text
-    [string drawAtPoint:CGPointMake(0.0, 0.0) withFont:font];
+    [string drawAtPoint:CGPointMake(0.0, 0.0) withAttributes:attrDict];
     UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
@@ -520,11 +522,10 @@
 }
 
 - (NSString *) text {
-    NSMutableString *cleanString = @"";
     NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithAttributedString:self.internalTextView.attributedText];
     if (NSMakeRange(0, [attrString length]).length > 0)
     {
-        unsigned N = 0;
+        NSUInteger N = 0;
         do
         {
             NSRange theEffectiveRange;
@@ -537,8 +538,7 @@
         }
         while (N < NSMakeRange(0, [attrString length]).length);
     }
-    cleanString = attrString.string;
-    return [cleanString copy];
+    return attrString.string;
 }
 
 - (void) substringToRange:(NSRange)range {
