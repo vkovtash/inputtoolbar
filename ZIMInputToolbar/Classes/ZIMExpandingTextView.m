@@ -51,6 +51,8 @@
 
 @interface ZIMExpandingTextView()
 
+@property (strong, nonatomic) NSMutableDictionary *replacementStringsDictionary;
+@property (strong, nonatomic) UITextRange *lastEnteredWordRange;
 @end
 
 @implementation ZIMExpandingTextView
@@ -90,6 +92,7 @@
         self.textViewBackgroundImage = [[UIImageView alloc] initWithFrame:backgroundFrame];
         self.internalTextView = [[UITextView alloc] initWithFrame:self.textViewBackgroundImage.bounds];
         self.placeholderLabel = [[UILabel alloc] initWithFrame: textViewFrame];
+        self.replacementStringsDictionary = [[NSMutableDictionary alloc] init];
         
         /* Custom Background image */
         UIImage *textViewBackgroundImage = nil;
@@ -487,6 +490,11 @@
 -(void) setText:(NSString *)atext {
     if (atext) {
         self.internalTextView.attributedText = [[NSAttributedString alloc] initWithString:atext];
+        if(atext.length > 0) {
+            for (NSString *keyString in self.replacementStringsDictionary.allKeys) {
+                [self replaceString:keyString withObjectFromString:self.replacementStringsDictionary[keyString]];
+            }
+        }
         [self performSelector:@selector(textViewDidChange:) withObject:self.internalTextView];
     }
 }
@@ -494,26 +502,47 @@
 - (void) replaceString:(NSString *)str withObjectFromString:(NSString *)stringToConvert {
     NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithAttributedString:self.internalTextView.attributedText];
     NSRange range = [self.internalTextView.attributedText.string rangeOfString:str options: NSBackwardsSearch];
-    [[attrText mutableString] replaceOccurrencesOfString:str withString:@"" options:NSCaseInsensitiveSearch range:range];
-    UIImage *image = [self imageFromString:stringToConvert];
-    InlineTextAttachment *attch = [[InlineTextAttachment alloc] initWithData:nil ofType:nil];
-    UIFont *font = self.internalTextView.font;
-    attch.fontDescender = font.descender;
-    attch.image = image;
-    attch.realText = [@"@" stringByAppendingString:stringToConvert];
-    NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:attch];
-    [attrText appendAttributedString:attachmentString];
-    self.internalTextView.attributedText = [attrText copy];
-    [self performSelector:@selector(textViewDidChange:) withObject:self.internalTextView];
+    while (range.location != NSNotFound) { //if the text filled from mesageDraft - the whole text should be analyzed for replacements, not only the last word
+        NSMutableAttributedString *aTextMutableString = [self.internalTextView.attributedText mutableCopy];
+        
+        UIImage *image = [self imageFromString:stringToConvert];
+        InlineTextAttachment *attch = [[InlineTextAttachment alloc] initWithData:nil ofType:nil];
+        UIFont *font = self.internalTextView.font;
+        attch.fontDescender = font.descender;
+        attch.image = image;
+        attch.realText = str;
+        NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:attch];
+        
+        [aTextMutableString replaceCharactersInRange:[self.internalTextView.attributedText.string rangeOfString:str options: nil] withAttributedString:attachmentString];
+        self.internalTextView.attributedText = [aTextMutableString copy];
+        range = [self.internalTextView.attributedText.string rangeOfString:str options: nil];
+        [self performSelector:@selector(textViewDidChange:) withObject:self.internalTextView];
+    }
+}
+
+- (NSString *)getLastEnteredWord
+{
+    NSRange cursorPosition = [self.internalTextView selectedRange];
+    NSMutableCharacterSet *workingSet = [[NSCharacterSet whitespaceAndNewlineCharacterSet] mutableCopy];
+    NSString *internalText = self.internalTextView.attributedText.string;
+    NSRange newRange = [self.internalTextView.attributedText.string rangeOfCharacterFromSet:workingSet
+                                                                                    options:NSBackwardsSearch
+                                                                                      range:NSMakeRange(0, cursorPosition.location)];
+    //The below code could probably be done in a better way
+    UITextPosition *beginning = self.internalTextView.beginningOfDocument;
+    UITextPosition *start = [self.internalTextView positionFromPosition:beginning offset:cursorPosition.location];
+    UITextPosition *end = [self.internalTextView positionFromPosition:beginning   offset:newRange.location+1];
+    self.lastEnteredWordRange = [self.internalTextView textRangeFromPosition:end toPosition:start];
+    
+    NSString* lastWord = [self.internalTextView textInRange:self.lastEnteredWordRange];
+    return lastWord;
 }
 
 - (UIImage *)imageFromString:(NSString *)string
 {
     NSDictionary *attrDict = [NSDictionary dictionaryWithObject:[UIFont boldSystemFontOfSize:12.0f] forKey:NSFontAttributeName];
     CGSize size = [string sizeWithAttributes:attrDict];
-    // Create a bitmap context into which the text will be rendered.
-    UIGraphicsBeginImageContext(size);
-    // Render the text
+    UIGraphicsBeginImageContextWithOptions(size, NO, 2.0);
     [string drawAtPoint:CGPointMake(0.0, 0.0) withAttributes:attrDict];
     UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -539,6 +568,20 @@
         while (N < NSMakeRange(0, [attrString length]).length);
     }
     return attrString.string;
+}
+
+- (void) replaceLastEnteredWordWithUserName:(NSString *)userName andUserId:(NSString *)userId{
+    [self.internalTextView replaceRange:self.lastEnteredWordRange withText:userId];
+    [self addReplacementString:userId toReplaceString:userName];
+    [self replaceString:userId withObjectFromString:userName];
+}
+
+- (void) addReplacementString:(NSString *)value toReplaceString:(NSString *)key {
+    [self.replacementStringsDictionary setObject:value forKey:key];
+}
+
+- (void) removeAllReplacementStrings {
+    [self.replacementStringsDictionary removeAllObjects];
 }
 
 - (void) substringToRange:(NSRange)range {
