@@ -40,7 +40,6 @@ static CGFloat kAnchorsWidth = 0;
 @property (nonatomic, strong) UIBarButtonItem *rightBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *leftBarButtonItem;
 @property (nonatomic, strong) NSString *maxInputButtonTitle;
-@property (strong, nonatomic) NSString *textBackup;
 @property (strong, nonatomic) UIBarButtonItem *leftTextAnchor;
 @property (strong, nonatomic) UIBarButtonItem *rightTextAnchor;
 @end
@@ -177,14 +176,6 @@ static CGFloat kAnchorsWidth = 0;
 - (void) setIsInAlternativeMode:(BOOL)isInAlternativeMode animated:(BOOL)animated {
     if (_isInAlternativeMode != isInAlternativeMode) {
         _isInAlternativeMode = isInAlternativeMode;
-        
-        if (_isInAlternativeMode) {
-            self.textBackup = self.textView.text;
-            self.textView.text = @"";
-        }
-        else {
-            self.textView.text = self.textBackup;
-        }
         
         void(^animations)() = ^{
             [self adjustVisibleItemsAnimated:animated];
