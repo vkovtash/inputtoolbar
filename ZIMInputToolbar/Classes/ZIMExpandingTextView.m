@@ -1,19 +1,19 @@
 /*
  *  ZIMExpandingTextView.m
- *
+ *  
  *  Created by Vlad Kovtash on 2013/03/26.
  *  Copyright 2013 Vlad Kovtash.
- *
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,31 +23,14 @@
  *  THE SOFTWARE.
  */
 
-/*
- *  This class is based on UIExpandingTextView by Brandon Hamilton
+/* 
+ *  This class is based on UIExpandingTextView by Brandon Hamilton 
  *  https://github.com/brandonhamilton/inputtoolbar
  */
 
 #import "ZIMExpandingTextView.h"
 
 #define kTextInsetX 4
-
-@interface InlineTextAttachment : NSTextAttachment
-
-@property CGFloat fontDescender;
-@property NSString *realText;
-
-@end
-
-@implementation InlineTextAttachment
-
-- (CGRect)attachmentBoundsForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(CGRect)lineFrag glyphPosition:(CGPoint)position characterIndex:(NSUInteger)charIndex {
-    CGRect superRect = [super attachmentBoundsForTextContainer:textContainer proposedLineFragment:lineFrag glyphPosition:position characterIndex:charIndex];
-    superRect.origin.y = self.fontDescender;
-    return superRect;
-}
-
-@end
 
 @interface ZIMExpandingTextView()
 
@@ -75,15 +58,15 @@
 @synthesize forceSizeUpdate = _forceSizeUpdate;
 @synthesize delegate = _delegate;
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame 
 {
-    if ((self = [super initWithFrame:frame]))
+    if ((self = [super initWithFrame:frame])) 
     {
         self.forceSizeUpdate = NO;
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        CGRect backgroundFrame = frame;
+		CGRect backgroundFrame = frame;
         backgroundFrame.origin.y = 0;
-        backgroundFrame.origin.x = 0;
+		backgroundFrame.origin.x = 0;
         
         CGRect textViewFrame = CGRectInset(backgroundFrame, kTextInsetX, 0);
         
@@ -112,8 +95,8 @@
         
         /* Internal Text View component */
         
-        self.internalTextView.delegate = self;
-        self.internalTextView.attributedText = [[NSAttributedString alloc] initWithString:@"-"];
+		self.internalTextView.delegate = self;
+        self.internalTextView.text = @"-";
         self.internalTextView.opaque = NO;
         self.internalTextView.backgroundColor = [UIColor clearColor];
         self.internalTextView.showsHorizontalScrollIndicator = NO;
@@ -129,11 +112,11 @@
         [self.textViewBackgroundImage addSubview:self.placeholderLabel];
         [self.textViewBackgroundImage addSubview:self.internalTextView];
         [self addSubview:self.textViewBackgroundImage];
-        
+
         /*set default parameters*/
         [self setFont:[UIFont systemFontOfSize:15]];
-        [self setMinimumNumberOfLines:1];
-        [self setMaximumNumberOfLines:5];
+		[self setMinimumNumberOfLines:1];
+		[self setMaximumNumberOfLines:5];
         
         [self clearText];
         [self sizeToFit];
@@ -208,22 +191,22 @@
     }
     
     switch (_rightViewVerticalAlign) {
-        case ZIMExpandingTextViewVerticalAlignBottom:
+            case ZIMExpandingTextViewVerticalAlignBottom:
             _rightView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin;
             _rightView.center = CGPointMake(self.bounds.size.width - _rightView.bounds.size.width/2,
-                                            self.bounds.size.height - _rightView.bounds.size.height/2);
+                                           self.bounds.size.height - _rightView.bounds.size.height/2);
             break;
             
-        case ZIMExpandingTextViewVerticalAlignCenter:
+            case ZIMExpandingTextViewVerticalAlignCenter:
             _rightView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
             _rightView.center = CGPointMake(self.bounds.size.width - _rightView.bounds.size.width/2,
-                                            self.bounds.size.height/2);
+                                           self.bounds.size.height/2);
             break;
             
-        case ZIMExpandingTextViewVerticalAlignTop:
+            case ZIMExpandingTextViewVerticalAlignTop:
             _rightView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin;
             _rightView.center = CGPointMake(self.bounds.size.width - _rightView.bounds.size.width/2,
-                                            _rightView.bounds.size.height/2);
+                                           _rightView.bounds.size.height/2);
             break;
     }
 }
@@ -234,22 +217,22 @@
     }
     
     switch (_leftViewVerticalAlign) {
-        case ZIMExpandingTextViewVerticalAlignBottom:
+            case ZIMExpandingTextViewVerticalAlignBottom:
             _leftView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin;
             _leftView.center = CGPointMake(_leftView.bounds.size.width/2,
-                                           self.bounds.size.height - _leftView.bounds.size.height/2);
+                                            self.bounds.size.height - _leftView.bounds.size.height/2);
             break;
             
-        case ZIMExpandingTextViewVerticalAlignCenter:
+            case ZIMExpandingTextViewVerticalAlignCenter:
             _leftView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
             _leftView.center = CGPointMake(_leftView.bounds.size.width/2,
-                                           self.bounds.size.height/2);
+                                            self.bounds.size.height/2);
             break;
             
-        case ZIMExpandingTextViewVerticalAlignTop:
+            case ZIMExpandingTextViewVerticalAlignTop:
             _leftView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin;
             _leftView.center = CGPointMake(_leftView.bounds.size.width/2,
-                                           _leftView.bounds.size.height/2);
+                                            _leftView.bounds.size.height/2);
             break;
     }
 }
@@ -292,21 +275,21 @@
 - (NSInteger) maximumNumberOfLines {
     return _maximumNumberOfLines;
 }
-
+     
 - (void) setMaximumNumberOfLines:(NSInteger)n {
     BOOL didChange            = NO;
-    NSString *saveText        = self.internalTextView.attributedText.string;
+    NSString *saveText        = self.internalTextView.text;
     NSString *newText         = @"-";
     self.internalTextView.hidden   = YES;
     self.internalTextView.delegate = nil;
     for (int i = 2; i <= n; ++i) {
         newText = [newText stringByAppendingString:@"\n|W|"];
     }
-    self.internalTextView.attributedText = [[NSAttributedString alloc] initWithString: newText];
+    self.internalTextView.text = newText;
     CGFloat height = [self measureHeight];
     didChange = (self.maximumHeight != height);
     self.maximumHeight = height;
-    self.internalTextView.attributedText = [[NSAttributedString alloc] initWithString: saveText];
+    self.internalTextView.text = saveText;
     self.internalTextView.hidden = NO;
     self.internalTextView.delegate = self;
     _maximumNumberOfLines = n;
@@ -321,16 +304,16 @@
 }
 
 - (void) setMinimumNumberOfLines:(NSInteger)m {
-    NSString *saveText        = self.internalTextView.attributedText.string;
+    NSString *saveText        = self.internalTextView.text;
     NSString *newText         = @"-";
     self.internalTextView.hidden   = YES;
     self.internalTextView.delegate = nil;
     for (int i = 2; i < m; ++i) {
         newText = [newText stringByAppendingString:@"\n|W|"];
     }
-    self.internalTextView.attributedText = [[NSAttributedString alloc] initWithString: newText];
+    self.internalTextView.text = newText;
     self.minimumHeight = [self measureHeight];
-    self.internalTextView.attributedText = [[NSAttributedString alloc] initWithString: saveText];
+    self.internalTextView.text = saveText;
     self.internalTextView.hidden = NO;
     self.internalTextView.delegate = self;
     _minimumNumberOfLines = m;
@@ -348,11 +331,11 @@
     frame.size.width -= fudgeFactor.width + self.internalTextView.textContainerInset.left + self.internalTextView.textContainerInset.right;
     
     static NSMutableAttributedString* textToMeasure;
-    if(self.internalTextView.attributedText.string && self.internalTextView.attributedText.string.length > 0){
+    if(self.internalTextView.attributedText && self.internalTextView.attributedText.length > 0){
         textToMeasure = [[NSMutableAttributedString alloc] initWithAttributedString:self.internalTextView.attributedText];
     }
     else{
-        textToMeasure = [[NSMutableAttributedString alloc] initWithString:self.internalTextView.attributedText.string];
+        textToMeasure = [[NSMutableAttributedString alloc] initWithString:self.internalTextView.text];
         [textToMeasure addAttribute:NSFontAttributeName value:self.internalTextView.font range:NSMakeRange(0, textToMeasure.length)];
     }
     
@@ -375,8 +358,8 @@
     self.placeholderLabel.alpha = textView.text.length == 0 ? 1 : 0;
     
     CGFloat textHeight = [self measureHeight];
-    __block CGFloat newHeight = textHeight;
-    
+	__block CGFloat newHeight = textHeight;
+	
     if(newHeight < self.minimumHeight || ![self hasText]) {
         newHeight = self.minimumHeight;
     }
@@ -385,9 +368,9 @@
         newHeight = self.maximumHeight;
     }
     
-    if (self.frame.size.height != newHeight || self.forceSizeUpdate) {
+	if (self.frame.size.height != newHeight || self.forceSizeUpdate) {
         self.forceSizeUpdate = NO;
-        if (newHeight <= self.maximumHeight) {
+		if (newHeight <= self.maximumHeight) {
             
             if (self.animateHeightChange) {
                 [UIView animateWithDuration:0.2
@@ -404,8 +387,8 @@
                 [self updateHeight:newHeight];
                 [self growDidStop];
             }
-        }
-    }
+		}
+	}
     
     if (textHeight > self.maximumHeight) {
         CGRect line = [textView caretRectForPosition:
@@ -422,8 +405,8 @@
     }
     
     if ([self.delegate respondsToSelector:@selector(expandingTextViewDidChange:)]) {
-        [self.delegate expandingTextViewDidChange:self];
-    }
+		[self.delegate expandingTextViewDidChange:self];
+	}
 }
 
 - (void) updateHeight:(CGFloat) newHeight {
@@ -456,9 +439,9 @@
 }
 
 -(void) growDidStop {
-    if ([self.delegate respondsToSelector:@selector(expandingTextView:didChangeHeight:)]) {
-        [self.delegate expandingTextView:self didChangeHeight:self.frame.size.height];
-    }
+	if ([self.delegate respondsToSelector:@selector(expandingTextView:didChangeHeight:)]) {
+		[self.delegate expandingTextView:self didChangeHeight:self.frame.size.height];
+	}
 }
 
 - (void) reloadInputViews {
@@ -478,194 +461,140 @@
 }
 
 - (BOOL) resignFirstResponder {
-    [super resignFirstResponder];
-    return [self.internalTextView resignFirstResponder];
+	[super resignFirstResponder];
+	return [self.internalTextView resignFirstResponder];
 }
 
 #pragma mark UITextView properties
 
 -(void) setText:(NSString *)atext {
-    if (atext) {
-        self.internalTextView.attributedText = [[NSAttributedString alloc] initWithString:atext];
-        [self performSelector:@selector(textViewDidChange:) withObject:self.internalTextView];
-    }
-}
-
-- (void) replaceString:(NSString *)str withObjectFromString:(NSString *)stringToConvert {
-    NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithAttributedString:self.internalTextView.attributedText];
-    NSRange range = [self.internalTextView.attributedText.string rangeOfString:str options: NSBackwardsSearch];
-    [[attrText mutableString] replaceOccurrencesOfString:str withString:@"" options:NSCaseInsensitiveSearch range:range];
-    UIImage *image = [self imageFromString:stringToConvert];
-    InlineTextAttachment *attch = [[InlineTextAttachment alloc] initWithData:nil ofType:nil];
-    UIFont *font = self.internalTextView.font;
-    attch.fontDescender = font.descender;
-    attch.image = image;
-    attch.realText = [@"@" stringByAppendingString:stringToConvert];
-    NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:attch];
-    [attrText appendAttributedString:attachmentString];
-    self.internalTextView.attributedText = [attrText copy];
+	self.internalTextView.text = atext;
     [self performSelector:@selector(textViewDidChange:) withObject:self.internalTextView];
 }
 
-- (UIImage *)imageFromString:(NSString *)string
-{
-    NSDictionary *attrDict = [NSDictionary dictionaryWithObject:[UIFont boldSystemFontOfSize:12.0f] forKey:NSFontAttributeName];
-    CGSize size = [string sizeWithAttributes:attrDict];
-    // Create a bitmap context into which the text will be rendered.
-    UIGraphicsBeginImageContext(size);
-    // Render the text
-    [string drawAtPoint:CGPointMake(0.0, 0.0) withAttributes:attrDict];
-    UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return image;
-}
-
 - (NSString *) text {
-    NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithAttributedString:self.internalTextView.attributedText];
-    if (NSMakeRange(0, [attrString length]).length > 0)
-    {
-        NSUInteger N = 0;
-        do
-        {
-            NSRange theEffectiveRange;
-            NSDictionary *theAttributes = [attrString attributesAtIndex:N longestEffectiveRange:&theEffectiveRange inRange:NSMakeRange(0, [attrString length])];
-            InlineTextAttachment *theAttachment = [theAttributes objectForKey:NSAttachmentAttributeName];
-            if (theAttachment != NULL) {
-                [attrString replaceCharactersInRange:theEffectiveRange withString:theAttachment.realText];
-            }
-            N = theEffectiveRange.location + theEffectiveRange.length;
-        }
-        while (N < NSMakeRange(0, [attrString length]).length);
-    }
-    return attrString.string;
-}
-
-- (void) substringToRange:(NSRange)range {
-    self.internalTextView.attributedText = [self.internalTextView.attributedText attributedSubstringFromRange:NSMakeRange(0, range.location)];
+	return self.internalTextView.text;
 }
 
 - (void) setFont:(UIFont *)afont {
-    self.internalTextView.font = afont;
+	self.internalTextView.font = afont;
     self.placeholderLabel.font = afont;
     [self setMaximumNumberOfLines:self.maximumNumberOfLines];
-    [self setMinimumNumberOfLines:self.minimumNumberOfLines];
+	[self setMinimumNumberOfLines:self.minimumNumberOfLines];
 }
 
 - (UIFont *) font {
-    return self.internalTextView.font;
-}
+	return self.internalTextView.font;
+}	
 
 - (void) setTextColor:(UIColor *)color {
-    self.internalTextView.textColor = color;
+	self.internalTextView.textColor = color;
 }
 
 - (UIColor *) textColor {
-    return self.internalTextView.textColor;
+	return self.internalTextView.textColor;
 }
 
-- (void)setTextAlignment:(NSTextAlignment)aligment {
-    self.internalTextView.textAlignment = aligment;
+- (void) setTextAlignment:(NSTextAlignment)aligment {
+	self.internalTextView.textAlignment = aligment;
 }
 
 - (NSTextAlignment) textAlignment {
-    NSRange range = NSMakeRange(0, 1);
-    NSParagraphStyle *textstyle = [self.internalTextView.attributedText attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:&range];
-    return textstyle.alignment;
+	return self.internalTextView.textAlignment;
 }
 
 - (void) setSelectedRange:(NSRange)range {
-    self.internalTextView.selectedRange = range;
+	self.internalTextView.selectedRange = range;
 }
 
 - (NSRange) selectedRange {
-    return self.internalTextView.selectedRange;
+	return self.internalTextView.selectedRange;
 }
 
 - (void) setEditable:(BOOL)beditable {
-    self.internalTextView.editable = beditable;
+	self.internalTextView.editable = beditable;
 }
 
 - (BOOL) isEditable {
-    return self.internalTextView.editable;
+	return self.internalTextView.editable;
 }
 
 - (void) setReturnKeyType:(UIReturnKeyType)keyType {
-    self.internalTextView.returnKeyType = keyType;
+	self.internalTextView.returnKeyType = keyType;
 }
 
 - (UIReturnKeyType) returnKeyType {
-    return self.internalTextView.returnKeyType;
+	return self.internalTextView.returnKeyType;
 }
 
 - (void) setDataDetectorTypes:(UIDataDetectorTypes)datadetector {
-    self.internalTextView.dataDetectorTypes = datadetector;
+	self.internalTextView.dataDetectorTypes = datadetector;
 }
 
 - (UIDataDetectorTypes) dataDetectorTypes {
-    return self.internalTextView.dataDetectorTypes;
+	return self.internalTextView.dataDetectorTypes;
 }
 
 - (BOOL) hasText {
-    return self.internalTextView.attributedText.length > 0;
+	return self.internalTextView.text.length > 0;
 }
 
 - (void) scrollRangeToVisible:(NSRange)range {
-    [self.internalTextView scrollRangeToVisible:range];
+	[self.internalTextView scrollRangeToVisible:range];
 }
 
 #pragma mark -
 #pragma mark UIExpandingTextViewDelegate
 
 - (BOOL) textViewShouldBeginEditing:(UITextView *)textView {
-    if ([self.delegate respondsToSelector:@selector(expandingTextViewShouldBeginEditing:)]) {
-        return [self.delegate expandingTextViewShouldBeginEditing:self];
-    }
+	if ([self.delegate respondsToSelector:@selector(expandingTextViewShouldBeginEditing:)]) {
+		return [self.delegate expandingTextViewShouldBeginEditing:self];
+	}
     return YES;
 }
 
 - (BOOL) textViewShouldEndEditing:(UITextView *)textView {
-    if ([self.delegate respondsToSelector:@selector(expandingTextViewShouldEndEditing:)]) {
-        return [self.delegate expandingTextViewShouldEndEditing:self];
-    }
+	if ([self.delegate respondsToSelector:@selector(expandingTextViewShouldEndEditing:)]) {
+		return [self.delegate expandingTextViewShouldEndEditing:self];
+	}
     return YES;
 }
 
 - (void) textViewDidBeginEditing:(UITextView *)textView {
-    if ([self.delegate respondsToSelector:@selector(expandingTextViewDidBeginEditing:)]) {
-        [self.delegate expandingTextViewDidBeginEditing:self];
-    }
+	if ([self.delegate respondsToSelector:@selector(expandingTextViewDidBeginEditing:)]) {
+		[self.delegate expandingTextViewDidBeginEditing:self];
+	}
 }
 
 - (void) textViewDidEndEditing:(UITextView *)textView  {
-    if ([self.delegate respondsToSelector:@selector(expandingTextViewDidEndEditing:)]) {
-        [self.delegate expandingTextViewDidEndEditing:self];
-    }
+	if ([self.delegate respondsToSelector:@selector(expandingTextViewDidEndEditing:)]) {
+		[self.delegate expandingTextViewDidEndEditing:self];
+	}
 }
 
 - (BOOL) textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)atext {
-    if(![textView hasText] && [atext isEqualToString:@""]) {
+	if(![textView hasText] && [atext isEqualToString:@""]) {
         return NO;
-    }
+	}
     
-    if ([atext isEqualToString:@"\n"]) {
-        if ([self.delegate respondsToSelector:@selector(expandingTextViewShouldReturn:)]) {
-            if (![self.delegate performSelector:@selector(expandingTextViewShouldReturn:) withObject:self]) {
-                return YES;
-            }
+	if ([atext isEqualToString:@"\n"]) {
+		if ([self.delegate respondsToSelector:@selector(expandingTextViewShouldReturn:)]) {
+			if (![self.delegate performSelector:@selector(expandingTextViewShouldReturn:) withObject:self]) {
+				return YES;
+			} 
             else {
-                [textView resignFirstResponder];
-                return NO;
-            }
-        }
-    }
-    return YES;
+				[textView resignFirstResponder];
+				return NO;
+			}
+		}
+	}
+	return YES;
 }
 
 - (void)textViewDidChangeSelection:(UITextView *)textView {
-    if ([self.delegate respondsToSelector:@selector(expandingTextViewDidChangeSelection:)]) {
-        [self.delegate expandingTextViewDidChangeSelection:self];
-    }
+	if ([self.delegate respondsToSelector:@selector(expandingTextViewDidChangeSelection:)]) {
+		[self.delegate expandingTextViewDidChangeSelection:self];
+	}
 }
 
 @end

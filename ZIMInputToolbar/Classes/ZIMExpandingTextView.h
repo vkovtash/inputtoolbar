@@ -92,6 +92,5 @@ typedef NS_ENUM(int16_t, ZIMExpandingTextViewVerticalAlign) {
 - (BOOL) hasText;
 - (void) scrollRangeToVisible:(NSRange)range;
 - (void) clearText;
-- (void) replaceString:(NSString *)str withObjectFromString:(NSString *)stringToConvert;
 
 @end
