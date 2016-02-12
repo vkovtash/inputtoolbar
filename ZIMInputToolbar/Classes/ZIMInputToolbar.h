@@ -51,6 +51,7 @@
 
 @interface ZIMInputToolbar : UIToolbar <ZIMExpandingTextViewDelegate>
 @property (nonatomic, readonly) ZIMExpandingTextView *textView;
+@property (readwrite, nonatomic) NSString *text;
 @property (nonatomic, readonly) UIButton *inputButton;
 @property (nonatomic, readonly) UIButton *plusButton;
 @property (nonatomic, strong) NSArray *alternativeBarButtonItems;
