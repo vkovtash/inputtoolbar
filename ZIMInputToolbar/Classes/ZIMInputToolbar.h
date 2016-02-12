@@ -35,35 +35,35 @@
 
 @protocol ZIMInputToolbarDelegate <NSObject>
 @optional
-- (void) inputButtonPressed:(ZIMInputToolbar *)toolbar;
-- (void) plusButtonPressed:(ZIMInputToolbar *)toolbar;
-- (void) inputToolbar:(ZIMInputToolbar *)inputToolbar didChangeHeight:(CGFloat)height;
-- (void) inputToolbar:(ZIMInputToolbar *)inputToolbar willChangeHeight:(CGFloat)height;
+- (void)inputButtonPressed:(ZIMInputToolbar *)toolbar;
+- (void)plusButtonPressed:(ZIMInputToolbar *)toolbar;
+- (void)inputToolbar:(ZIMInputToolbar *)inputToolbar didChangeHeight:(CGFloat)height;
+- (void)inputToolbar:(ZIMInputToolbar *)inputToolbar willChangeHeight:(CGFloat)height;
 
-- (BOOL) inputToolbarShouldBeginEditing:(ZIMInputToolbar *)inputToolbar;
-- (BOOL) inputToolbarShouldEndEditing:(ZIMInputToolbar *)inputToolbar;
-- (void) inputToolbarDidBeginEditing:(ZIMInputToolbar *)inputToolbar;
-- (void) inputToolbarDidEndEditing:(ZIMInputToolbar *)inputToolbar;
-- (BOOL) inputToolbar:(ZIMInputToolbar *)inputToolbar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
-- (void) inputToolbarViewDidChange:(ZIMInputToolbar *)inputToolbar;
-- (void) inputToolbarViewDidChangeSelection:(ZIMInputToolbar *)inputToolbar;
+- (BOOL)inputToolbarShouldBeginEditing:(ZIMInputToolbar *)inputToolbar;
+- (BOOL)inputToolbarShouldEndEditing:(ZIMInputToolbar *)inputToolbar;
+- (void)inputToolbarDidBeginEditing:(ZIMInputToolbar *)inputToolbar;
+- (void)inputToolbarDidEndEditing:(ZIMInputToolbar *)inputToolbar;
+- (BOOL)inputToolbar:(ZIMInputToolbar *)inputToolbar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
+- (void)inputToolbarViewDidChange:(ZIMInputToolbar *)inputToolbar;
+- (void)inputToolbarViewDidChangeSelection:(ZIMInputToolbar *)inputToolbar;
 @end
 
 @interface ZIMInputToolbar : UIToolbar <ZIMExpandingTextViewDelegate>
-@property (nonatomic, readonly) ZIMExpandingTextView *textView;
+@property (readonly, nonatomic) ZIMExpandingTextView *textView;
 @property (readwrite, nonatomic) NSString *text;
-@property (nonatomic, readonly) UIButton *inputButton;
-@property (nonatomic, readonly) UIButton *plusButton;
-@property (nonatomic, strong) NSArray *alternativeBarButtonItems;
-@property (nonatomic, readonly) UIBarButtonItem *edgeSeparator;
-@property (nonatomic, weak) id <ZIMInputToolbarDelegate> inputDelegate;
-@property (nonatomic, assign) BOOL isPlusButtonVisible;
-@property (nonatomic, assign) BOOL animateHeightChanges;
-@property (nonatomic, assign) BOOL isInAlternativeMode;
+@property (readonly, nonatomic) UIButton *inputButton;
+@property (readonly, nonatomic) UIButton *plusButton;
+@property (strong, nonatomic) UIInputViewController *alternativeInputViewController;
+@property (strong, nonatomic) NSArray *alternativeBarButtonItems;
+@property (readonly, nonatomic) UIBarButtonItem *edgeSeparator;
+@property (weak, nonatomic) id <ZIMInputToolbarDelegate> inputDelegate;
+@property (readonly, nonatomic) BOOL isPlusButtonVisible;
+@property (assign, nonatomic) BOOL animateHeightChanges;
+@property (assign, nonatomic) BOOL isInAlternativeMode;
 
-- (instancetype) initWithFrame:(CGRect)frame label:(NSString *)label;
-- (instancetype) initWithFrame:(CGRect)frame label:(NSString *)label possibleLabels:(NSSet *)possibleLabels;
+- (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label;
+- (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label possibleLabels:(NSSet *)possibleLabels;
 
-- (void) setIsInAlternativeMode:(BOOL)isInAlternativeMode animated:(BOOL)animated;
-- (void) setIsPlusButtonVisible:(BOOL)isPlusButtonVisible animated:(BOOL)animated;
+- (void)setIsInAlternativeMode:(BOOL)isInAlternativeMode animated:(BOOL)animated;
 @end

@@ -50,41 +50,40 @@ static CGFloat kAnchorsWidth = 0;
 @synthesize inputButton = _inputButton;
 @synthesize edgeSeparator = _edgeSeparator;
 
-- (instancetype) initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if ((self = [super initWithCoder:aDecoder])) {
         [self setupToolbar:kInputButtonTitleSend possibleLabels:nil];
     }
     return self;
 }
 
-- (instancetype) initWithFrame:(CGRect)frame label:(NSString *)label {
+- (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label {
     return [self initWithFrame:frame label:label possibleLabels:nil];
 }
 
-- (instancetype) initWithFrame:(CGRect)frame label:(NSString *)label possibleLabels:(NSSet *)possibleLabels {
+- (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label possibleLabels:(NSSet *)possibleLabels {
     if ((self = [super initWithFrame:frame])) {
         [self setupToolbar:label possibleLabels:possibleLabels];
     }
     return self;
 }
 
-- (instancetype) initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
         [self setupToolbar:kInputButtonTitleSend possibleLabels:[NSSet setWithObjects:kInputButtonTitleSend, nil]];
     }
     return self;
 }
 
-- (instancetype) init {
+- (instancetype)init {
     if ((self = [super init])) {
         [self setupToolbar:kInputButtonTitleSend possibleLabels:nil];
     }
     return self;
 }
 
-- (void) setupToolbar:(NSString *)buttonLabel possibleLabels:(NSSet *)possibleLabels {
+- (void)setupToolbar:(NSString *)buttonLabel possibleLabels:(NSSet *)possibleLabels {
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-    _isPlusButtonVisible = YES;
     _inputButton = nil;
     _plusButton = nil;
     
@@ -125,7 +124,7 @@ static CGFloat kAnchorsWidth = 0;
     [self adjustVisibleItemsAnimated:NO];
 }
 
-- (UIButton *) plusButton {
+- (UIButton *)plusButton {
     if (!_plusButton) {
         _plusButton = [UIButton buttonWithType:UIButtonTypeSystem];
         [_plusButton setTitle:@"+" forState:UIControlStateNormal];
@@ -136,7 +135,7 @@ static CGFloat kAnchorsWidth = 0;
     return _plusButton;
 }
 
-- (UIButton *) inputButton {
+- (UIButton *)inputButton {
     if (!_inputButton) {
         _inputButton = [UIButton buttonWithType:UIButtonTypeSystem];
         _inputButton.titleLabel.font = [UIFont systemFontOfSize:17.0f];
@@ -150,7 +149,7 @@ static CGFloat kAnchorsWidth = 0;
     return _inputButton;
 }
 
-- (UIBarButtonItem *) edgeSeparator {
+- (UIBarButtonItem *)edgeSeparator {
     if (!_edgeSeparator) {
         _edgeSeparator = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
         _edgeSeparator.width = kToolbarEdgeSeparatorWidth;
@@ -158,46 +157,69 @@ static CGFloat kAnchorsWidth = 0;
     return _edgeSeparator;
 }
 
-- (void) setIsPlusButtonVisible:(BOOL)isPlusButtonVisible {
-    [self setIsPlusButtonVisible:isPlusButtonVisible animated:NO];
-}
-
-- (void) setIsPlusButtonVisible:(BOOL)isPlusButtonVisible animated:(BOOL)animated {
-    if (_isPlusButtonVisible != isPlusButtonVisible) {
-        _isPlusButtonVisible = isPlusButtonVisible;
-        [self adjustVisibleItemsAnimated:animated];
-        [self layoutExpandingTextViewAnimated:YES];
+- (void)setAlternativeInputViewController:(UIInputViewController *)alternativeInputViewController {
+    _alternativeInputViewController = alternativeInputViewController;
+    if (_alternativeInputViewController) {
+        [self adjustVisibleItemsAnimated:NO];
+        [self layoutExpandingTextViewAnimated:NO];
     }
 }
 
-- (void) setIsInAlternativeMode:(BOOL)isInAlternativeMode {
+- (BOOL)isPlusButtonVisible {
+    return self.alternativeInputViewController != nil;
+}
+
+- (void)setIsInAlternativeMode:(BOOL)isInAlternativeMode {
     [self setIsInAlternativeMode:isInAlternativeMode animated:NO];
 }
 
-- (void) setIsInAlternativeMode:(BOOL)isInAlternativeMode animated:(BOOL)animated {
-    if (_isInAlternativeMode != isInAlternativeMode) {
-        _isInAlternativeMode = isInAlternativeMode;
-        
-        if (_isInAlternativeMode) {
-            self.textBackup = self.textView.text;
-            self.textView.text = @"";
-        }
-        else {
-            self.textView.text = self.textBackup;
-        }
-        
-        void(^animations)() = ^{
-            [self adjustVisibleItemsAnimated:animated];
-            [self layoutExpandingTextViewAnimated:NO];
-            self.textView.alpha = _isInAlternativeMode ? 0 : 1;
-        };
-        
-        if (animated) {
-            [UIView animateWithDuration:0.2 animations:animations];
-        }
-        else {
-            animations();
-        }
+- (void)setIsInAlternativeMode:(BOOL)isInAlternativeMode animated:(BOOL)animated {
+    if (!self.alternativeInputViewController) {
+        return;
+    }
+    
+    if (_isInAlternativeMode == isInAlternativeMode) {
+        return;
+    }
+    _isInAlternativeMode = isInAlternativeMode;
+    
+    if (_isInAlternativeMode) {
+        self.textBackup = self.textView.text;
+        self.textView.text = @"";
+    }
+    else {
+        self.textView.text = self.textBackup;
+    }
+    
+    void(^animations)() = ^{
+        [self adjustVisibleItemsAnimated:animated];
+        [self layoutExpandingTextViewAnimated:NO];
+        self.textView.alpha = _isInAlternativeMode ? 0 : 1;
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:0.2 animations:animations];
+    }
+    else {
+        animations();
+    }
+    
+    [self setAlternativeInputModeOn:_isInAlternativeMode];
+}
+
+- (void)setAlternativeInputModeOn:(BOOL)on {
+    if (!self.alternativeInputViewController) {
+        return;
+    }
+    
+    self.plusButton.selected = on;
+    self.textView.inputView = on ? self.alternativeInputViewController.inputView : nil;
+    
+    if (self.textView.internalTextView.isFirstResponder) {
+        [self.textView reloadInputViews];
+    }
+    else if (on) {
+        [self.textView becomeFirstResponder];
     }
 }
 
@@ -214,21 +236,21 @@ static CGFloat kAnchorsWidth = 0;
     }
 }
 
-- (void) setAnimateHeightChanges:(BOOL)animateHeightChanges {
+- (void)setAnimateHeightChanges:(BOOL)animateHeightChanges {
     self.textView.animateHeightChange = animateHeightChanges;
 }
 
-- (BOOL) animateHeightChanges {
+- (BOOL)animateHeightChanges {
     return self.textView.animateHeightChange;
 }
 
-- (void) tintColorDidChange {
+- (void)tintColorDidChange {
     UIColor *tintColor = [UIApplication sharedApplication].delegate.window.tintColor;
     self.rightBarButtonItem.tintColor = tintColor;
     self.leftBarButtonItem.tintColor = tintColor;
 }
 
-- (void) layoutSubviews {
+- (void)layoutSubviews {
     [super layoutSubviews];
     
     CGRect i = self.rightBarButtonItem.customView.frame;
@@ -242,20 +264,22 @@ static CGFloat kAnchorsWidth = 0;
     [self layoutExpandingTextViewAnimated:NO];
 }
 
-- (void) inputButtonPressed {
+- (void)inputButtonPressed {
     if ([self.textView.text length] > 0 &&
         [self.inputDelegate respondsToSelector:@selector(inputButtonPressed:)]) {
         [self.inputDelegate inputButtonPressed:self];
     }
 }
 
-- (void) plusButtonPressed {
+- (void)plusButtonPressed {
+    [self setIsInAlternativeMode:!self.isInAlternativeMode animated:YES];
+    
     if ([self.inputDelegate respondsToSelector:@selector(plusButtonPressed:)]) {
         [self.inputDelegate plusButtonPressed:self];
     }
 }
 
-- (void) adjustVisibleItemsAnimated:(BOOL)animated {
+- (void)adjustVisibleItemsAnimated:(BOOL)animated {
     NSMutableArray *barItems = [NSMutableArray array];
     
     [barItems addObject:self.edgeSeparator];
@@ -281,7 +305,7 @@ static CGFloat kAnchorsWidth = 0;
     [self setItems:barItems animated:animated];
 }
 
-- (void) layoutExpandingTextViewAnimated:(BOOL)animated {
+- (void)layoutExpandingTextViewAnimated:(BOOL)animated {
     void(^layout)() = ^{
         CGRect frame = self.textView.frame;
         frame.size.width = self.rightTextAnchor.customView.frame.origin.x - self.leftTextAnchor.customView.frame.origin.x;
@@ -299,7 +323,7 @@ static CGFloat kAnchorsWidth = 0;
 
 #pragma mark - UIExpandingTextView delegate
 
-- (void) expandingTextView:(ZIMExpandingTextView *)expandingTextView willChangeHeight:(CGFloat)height {
+- (void)expandingTextView:(ZIMExpandingTextView *)expandingTextView willChangeHeight:(CGFloat)height {
     /* Adjust the height of the toolbar when the input component expands */
     float diff = (self.textView.frame.size.height - height);
     CGRect r = self.frame;
@@ -317,7 +341,7 @@ static CGFloat kAnchorsWidth = 0;
     }
 }
 
-- (void) expandingTextViewDidChange:(ZIMExpandingTextView *)expandingTextView {
+- (void)expandingTextViewDidChange:(ZIMExpandingTextView *)expandingTextView {
     /* Enable/Disable the button */
     self.inputButton.enabled = (expandingTextView.text.length > 0);
     
@@ -326,40 +350,40 @@ static CGFloat kAnchorsWidth = 0;
     }
 }
 
-- (BOOL) expandingTextViewShouldBeginEditing:(ZIMExpandingTextView *)expandingTextView {
+- (BOOL)expandingTextViewShouldBeginEditing:(ZIMExpandingTextView *)expandingTextView {
     if ([self.inputDelegate respondsToSelector:@selector(inputToolbarShouldBeginEditing:)]) {
         return [self.inputDelegate inputToolbarShouldBeginEditing:self];
     }
     return YES;
 }
 
-- (BOOL) expandingTextViewShouldEndEditing:(ZIMExpandingTextView *)expandingTextView {
+- (BOOL)expandingTextViewShouldEndEditing:(ZIMExpandingTextView *)expandingTextView {
     if ([self.inputDelegate respondsToSelector:@selector(inputToolbarShouldEndEditing:)]) {
         return [self.inputDelegate inputToolbarShouldEndEditing:self];
     }
     return YES;
 }
 
-- (void) expandingTextViewDidBeginEditing:(ZIMExpandingTextView *)expandingTextView {
+- (void)expandingTextViewDidBeginEditing:(ZIMExpandingTextView *)expandingTextView {
     if ([self.inputDelegate respondsToSelector:@selector(inputToolbarDidBeginEditing:)]) {
         [self.inputDelegate inputToolbarDidBeginEditing:self];
     }
 }
 
-- (void) expandingTextViewDidEndEditing:(ZIMExpandingTextView *)expandingTextView {
+- (void)expandingTextViewDidEndEditing:(ZIMExpandingTextView *)expandingTextView {
     if ([self.inputDelegate respondsToSelector:@selector(inputToolbarDidEndEditing:)]) {
         [self.inputDelegate inputToolbarDidEndEditing:self];
     }
 }
 
-- (BOOL) expandingTextView:(ZIMExpandingTextView *)expandingTextView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+- (BOOL)expandingTextView:(ZIMExpandingTextView *)expandingTextView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if ([self.inputDelegate respondsToSelector:@selector(inputToolbar:shouldChangeTextInRange:replacementText:)]) {
         return [self.inputDelegate inputToolbar:self shouldChangeTextInRange:range replacementText:text];
     }
     return YES;
 }
 
-- (void) expandingTextViewDidChangeSelection:(ZIMExpandingTextView *)expandingTextView {
+- (void)expandingTextViewDidChangeSelection:(ZIMExpandingTextView *)expandingTextView {
     if ([self.inputDelegate respondsToSelector:@selector(inputToolbarViewDidChangeSelection:)]) {
         [self.inputDelegate inputToolbarViewDidChangeSelection:self];
     }
