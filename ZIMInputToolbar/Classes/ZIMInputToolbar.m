@@ -63,6 +63,7 @@ static CGFloat kAnchorsWidth = 0;
 
 - (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label possibleLabels:(NSSet *)possibleLabels {
     if ((self = [super initWithFrame:frame])) {
+        _buttonsBottomOffset = CGRectGetHeight(frame) / 2;
         [self setupToolbar:label possibleLabels:possibleLabels];
     }
     return self;
@@ -252,15 +253,18 @@ static CGFloat kAnchorsWidth = 0;
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
-    CGRect i = self.rightBarButtonItem.customView.frame;
-    i.origin.y = self.frame.size.height - i.size.height - 7;
-    self.rightBarButtonItem.customView.frame = i;
-    
-    i = self.leftBarButtonItem.customView.frame;
-    i.origin.y = self.frame.size.height - i.size.height - 7;
-    self.leftBarButtonItem.customView.frame = i;
-    
+
+    CGFloat newY = CGRectGetHeight(self.bounds) - self.buttonsBottomOffset;
+
+    CGPoint point;
+    point = self.rightBarButtonItem.customView.center;
+    point.y = newY;
+    self.rightBarButtonItem.customView.center = point;
+
+    point = self.leftBarButtonItem.customView.center;
+    point.y = newY;
+    self.leftBarButtonItem.customView.center = point;
+
     [self layoutExpandingTextViewAnimated:NO];
 }
 
