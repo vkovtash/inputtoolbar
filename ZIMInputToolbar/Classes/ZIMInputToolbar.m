@@ -63,7 +63,6 @@ static CGFloat kAnchorsWidth = 0;
 
 - (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label possibleLabels:(NSSet *)possibleLabels {
     if ((self = [super initWithFrame:frame])) {
-        _buttonsBottomOffset = CGRectGetHeight(frame) / 2;
         [self setupToolbar:label possibleLabels:possibleLabels];
     }
     return self;

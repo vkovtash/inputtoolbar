@@ -55,7 +55,6 @@
 @property (readwrite, nonatomic) NSString *text;
 @property (readonly, nonatomic) UIButton *inputButton;
 @property (readonly, nonatomic) UIButton *plusButton;
-@property (assign, nonatomic) CGFloat buttonsBottomOffset;
 @property (strong, nonatomic) UIInputViewController *alternativeInputViewController;
 @property (strong, nonatomic) NSArray *alternativeBarButtonItems;
 @property (readonly, nonatomic) UIBarButtonItem *edgeSeparator;
