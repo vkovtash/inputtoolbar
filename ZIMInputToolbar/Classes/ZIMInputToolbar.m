@@ -87,6 +87,7 @@ static CGFloat kAnchorsWidth = 0;
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
     _inputButton = nil;
     _plusButton = nil;
+    _minHeight = 44;
     
     _maxInputButtonTitle = buttonLabel;
     for(NSString *possibleLabel in possibleLabels) {
@@ -107,15 +108,23 @@ static CGFloat kAnchorsWidth = 0;
     /* Create UIExpandingTextView input */
     _textView = [[ZIMExpandingTextView alloc] initWithFrame:self.bounds];
     _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    _textView.frame = CGRectOffset(self.textView.frame, 0, (self.bounds.size.height - self.textView.bounds.size.height) / 2);
+    _textView.center = CGPointMake(_textView.center.x, CGRectGetMidY(self.bounds));
     _textView.clipsToBounds = YES;
     [self addSubview:_textView];
     
-    _leftTextAnchor = [[UIBarButtonItem alloc] initWithCustomView:[[UIView alloc] initWithFrame:CGRectMake(0, 0, kAnchorsWidth, self.bounds.size.height)]];
+    _leftTextAnchor =
+        [[UIBarButtonItem alloc] initWithCustomView:[[UIView alloc] initWithFrame:CGRectMake(0,
+                                                                                             0,
+                                                                                             kAnchorsWidth,
+                                                                                             CGRectGetHeight(self.bounds))]];
     _leftTextAnchor.customView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     _leftTextAnchor.customView.backgroundColor = [UIColor redColor];
     
-    _rightTextAnchor = [[UIBarButtonItem alloc] initWithCustomView:[[UIView alloc] initWithFrame:CGRectMake(0, 0, kAnchorsWidth, self.bounds.size.height)]];
+    _rightTextAnchor =
+        [[UIBarButtonItem alloc] initWithCustomView:[[UIView alloc] initWithFrame:CGRectMake(0,
+                                                                                             0,
+                                                                                             kAnchorsWidth,
+                                                                                             CGRectGetHeight(self.bounds))]];
     _rightTextAnchor.customView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     _rightTextAnchor.customView.backgroundColor = [UIColor redColor];
     
@@ -123,6 +132,7 @@ static CGFloat kAnchorsWidth = 0;
     self.animateHeightChanges = YES;
     
     [self adjustVisibleItemsAnimated:NO];
+    [self updateHeight];
 }
 
 - (UIButton *)plusButton {
@@ -224,6 +234,16 @@ static CGFloat kAnchorsWidth = 0;
     }
 }
 
+- (void)setMinHeight:(CGFloat)minHeight {
+    _minHeight = minHeight;
+    [self updateHeight];
+}
+
+- (void)setTextFieldInsets:(UIEdgeInsets)textFieldInsets {
+    _textFieldInsets = textFieldInsets;
+    [self updateHeight];
+}
+
 - (NSString *)text {
     return self.isInAlternativeMode ? self.textBackup : self.textView.text;
 }
@@ -254,7 +274,7 @@ static CGFloat kAnchorsWidth = 0;
 - (void)layoutSubviews {
     [super layoutSubviews];
 
-    CGFloat newY = CGRectGetHeight(self.bounds) - self.buttonsBottomOffset;
+    CGFloat newY = CGRectGetHeight(self.bounds) - self.minHeight / 2;
 
     CGPoint point;
     point = self.rightBarButtonItem.customView.center;
@@ -311,9 +331,24 @@ static CGFloat kAnchorsWidth = 0;
 
 - (void)layoutExpandingTextViewAnimated:(BOOL)animated {
     void(^layout)() = ^{
+
+        CGFloat y = 0;
+        CGFloat textViewHeigth = CGRectGetHeight(self.textView.frame);
+        UIEdgeInsets insets = self.textFieldInsets;
+
+        if (textViewHeigth + insets.top + insets.bottom < CGRectGetHeight(self.bounds)) {
+            y = (CGRectGetHeight(self.bounds) - textViewHeigth) / 2;
+        }
+        else {
+            y = insets.top;
+        }
+
         CGRect frame = self.textView.frame;
-        frame.size.width = self.rightTextAnchor.customView.frame.origin.x - self.leftTextAnchor.customView.frame.origin.x;
-        frame.origin.x = self.leftTextAnchor.customView.frame.origin.x;
+        frame.size.width = CGRectGetMinX(self.rightTextAnchor.customView.frame) -
+                           CGRectGetMaxX(self.leftTextAnchor.customView.frame) +
+                           insets.left + insets.right;
+        frame.origin.x = CGRectGetMaxX(self.leftTextAnchor.customView.frame) + insets.left;
+        frame.origin.y = y;
         self.textView.frame = frame;
     };
     
@@ -325,23 +360,36 @@ static CGFloat kAnchorsWidth = 0;
     }
 }
 
+- (void)updateHeight {
+        [self expandingTextView:_textView willChangeHeight:CGRectGetHeight(self.textView.frame)];
+}
+
 #pragma mark - UIExpandingTextView delegate
 
 - (void)expandingTextView:(ZIMExpandingTextView *)expandingTextView willChangeHeight:(CGFloat)height {
     /* Adjust the height of the toolbar when the input component expands */
-    float diff = (self.textView.frame.size.height - height);
-    CGRect r = self.frame;
-    r.origin.y += diff;
-    r.size.height -= diff;
-    
+
+    CGFloat fullHeight = height + self.textFieldInsets.top + self.textFieldInsets.bottom;
+
+    CGFloat newHeight = MAX(fullHeight, self.minHeight);
+    CGRect newBounds = self.bounds;
+    newBounds.size.height = newHeight;
+
+    CGPoint newCenter = CGPointMake(self.center.x, self.center.y + (CGRectGetHeight(self.bounds) - newHeight) / 2);
+
+    if (CGRectEqualToRect(self.bounds, newBounds) && CGPointEqualToPoint(self.center, newCenter)) {
+        return;
+    }
+
     if ([self.inputDelegate respondsToSelector:@selector(inputToolbar:willChangeHeight:)]) {
-        [self.inputDelegate inputToolbar:self willChangeHeight:r.size.height];
+        [self.inputDelegate inputToolbar:self willChangeHeight:CGRectGetHeight(newBounds)];
     }
     
-    self.frame = r;
-    
+    self.bounds = newBounds;
+    self.center = newCenter;
+
     if ([self.inputDelegate respondsToSelector:@selector(inputToolbar:didChangeHeight:)]) {
-        [self.inputDelegate inputToolbar:self didChangeHeight:self.frame.size.height];
+        [self.inputDelegate inputToolbar:self didChangeHeight:CGRectGetHeight(self.bounds)];
     }
 }
 

@@ -50,6 +50,7 @@
 @end
 
 @interface ZIMInputToolbar : UIToolbar <ZIMExpandingTextViewDelegate>
+@property (weak, nonatomic) UIView *topAccessoryView;
 @property (readonly, nonatomic) ZIMExpandingTextView *textView;
 @property (readwrite, nonatomic) NSString *text;
 @property (readonly, nonatomic) UIButton *inputButton;
@@ -62,6 +63,8 @@
 @property (readonly, nonatomic) BOOL isPlusButtonVisible;
 @property (assign, nonatomic) BOOL animateHeightChanges;
 @property (assign, nonatomic) BOOL isInAlternativeMode;
+@property (assign, nonatomic) CGFloat minHeight;
+@property (assign, nonatomic) UIEdgeInsets textFieldInsets;
 
 - (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label;
 - (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label possibleLabels:(NSSet *)possibleLabels;
