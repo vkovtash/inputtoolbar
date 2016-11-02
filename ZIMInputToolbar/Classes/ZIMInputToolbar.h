@@ -50,20 +50,21 @@
 @end
 
 @interface ZIMInputToolbar : UIToolbar <ZIMExpandingTextViewDelegate>
-@property (weak, nonatomic) UIView *topAccessoryView;
-@property (readonly, nonatomic) ZIMExpandingTextView *textView;
-@property (readwrite, nonatomic) NSString *text;
-@property (readonly, nonatomic) UIButton *inputButton;
-@property (readonly, nonatomic) UIButton *plusButton;
-@property (strong, nonatomic) UIInputViewController *alternativeInputViewController;
-@property (strong, nonatomic) NSArray *alternativeBarButtonItems;
-@property (readonly, nonatomic) UIBarButtonItem *edgeSeparator;
-@property (weak, nonatomic) id <ZIMInputToolbarDelegate> inputDelegate;
 @property (readonly, nonatomic) BOOL isPlusButtonVisible;
 @property (assign, nonatomic) BOOL animateHeightChanges;
 @property (assign, nonatomic) BOOL isInAlternativeMode;
-@property (assign, nonatomic) CGFloat minHeight;
 @property (assign, nonatomic) UIEdgeInsets textFieldInsets;
+@property (assign, nonatomic) CGFloat minHeight;
+@property (assign, nonatomic) CGFloat topAccessoryHeight;
+@property (weak, nonatomic) UIView *topAccessoryView;
+@property (readonly, nonatomic) ZIMExpandingTextView *textView;
+@property (readonly, nonatomic) UIBarButtonItem *edgeSeparator;
+@property (readonly, nonatomic) UIButton *inputButton;
+@property (readonly, nonatomic) UIButton *plusButton;
+@property (readwrite, nonatomic) NSString *text;
+@property (strong, nonatomic) UIInputViewController *alternativeInputViewController;
+@property (strong, nonatomic) NSArray *alternativeBarButtonItems;
+@property (weak, nonatomic) id <ZIMInputToolbarDelegate> inputDelegate;
 
 - (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label;
 - (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label possibleLabels:(NSSet *)possibleLabels;
