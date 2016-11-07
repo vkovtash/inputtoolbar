@@ -89,6 +89,7 @@ static CGFloat kAnchorsWidth = 0;
     _plusButton = nil;
     _minHeight = 44;
     _topAccessoryHeight = 44;
+    _isInputButtonEnabled = YES;
     
     _maxInputButtonTitle = buttonLabel;
     for(NSString *possibleLabel in possibleLabels) {
@@ -326,6 +327,11 @@ static CGFloat kAnchorsWidth = 0;
     [self updateHeight];
 }
 
+- (void)setIsInputButtonEnabled:(BOOL)isInputButtonEnabled {
+    _isInputButtonEnabled = isInputButtonEnabled;
+    self.inputButton.enabled = _isInputButtonEnabled && self.textView.text.length > 0;
+}
+
 - (BOOL)animateHeightChanges {
     return self.textView.animateHeightChange;
 }
@@ -426,7 +432,7 @@ static CGFloat kAnchorsWidth = 0;
 }
 
 - (void)updateHeight {
-        [self expandingTextView:_textView didChangeHeight:CGRectGetHeight(self.textView.frame)];
+    [self expandingTextView:_textView didChangeHeight:CGRectGetHeight(self.textView.frame)];
 }
 
 #pragma mark - UIExpandingTextView delegate
@@ -463,7 +469,7 @@ static CGFloat kAnchorsWidth = 0;
 
 - (void)expandingTextViewDidChange:(ZIMExpandingTextView *)expandingTextView {
     /* Enable/Disable the button */
-    self.inputButton.enabled = (expandingTextView.text.length > 0);
+    self.inputButton.enabled = self.isInputButtonEnabled && expandingTextView.text.length > 0;
     
     if ([self.inputDelegate respondsToSelector:@selector(inputToolbarViewDidChange:)]) {
         [self.inputDelegate inputToolbarViewDidChange:self];
