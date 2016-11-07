@@ -185,6 +185,10 @@ static CGFloat kAnchorsWidth = 0;
     return self.alternativeInputViewController != nil;
 }
 
+- (BOOL)isTopAccessoryVisible {
+    return !self.isInAlternativeMode && self.topAccessoryView != nil;
+}
+
 - (void)setIsInAlternativeMode:(BOOL)isInAlternativeMode {
     [self setIsInAlternativeMode:isInAlternativeMode animated:NO];
 }
@@ -221,6 +225,7 @@ static CGFloat kAnchorsWidth = 0;
     }
     
     [self setAlternativeInputModeOn:_isInAlternativeMode];
+    [self applyTopAccessoryVisibilityAnimated:animated];
 }
 
 - (void)setAlternativeInputModeOn:(BOOL)on {
@@ -282,24 +287,37 @@ static CGFloat kAnchorsWidth = 0;
     _topAccessoryView = topAccessoryView;
     _topAccessoryView.frame = _topAccessoryContainer.bounds;
 
-    BOOL isHidden = _topAccessoryView == nil;
+    BOOL isHidden = self.isTopAccessoryVisible;
 
     if (!animated) {
-        _topAccessoryContainer.hidden = isHidden;
-        _topAccessoryView.alpha = isHidden ? 0.0f : 1.0f;
+        [self applyTopAccessoryVisibilityAnimated:NO];
         [self updateHeight];
         return;
     }
 
-    if (!isHidden) {
-        _topAccessoryContainer.hidden = NO;
+    [UIView animateWithDuration:0.2 animations:^{
+        [self applyTopAccessoryVisibilityAnimated:YES];
+        [self updateHeight];
+    }];
+}
+
+- (void)applyTopAccessoryVisibilityAnimated:(BOOL)animated {
+    BOOL isVisible = self.isTopAccessoryVisible;
+
+    if (!animated) {
+        self.topAccessoryContainer.hidden = !isVisible;
+        self.topAccessoryView.alpha = isVisible ? 1.0f : 0.0f;
+        return;
+    }
+
+    if (isVisible) {
+        self.topAccessoryContainer.hidden = NO;
     }
 
     [UIView animateWithDuration:0.2 animations:^{
-        self.topAccessoryView.alpha = isHidden ? 0.0f : 1.0f;
-        [self updateHeight];
+        self.topAccessoryView.alpha = isVisible ? 1.0f : 0.0f;
     } completion:^(BOOL isFinished) {
-        self.topAccessoryContainer.hidden = isHidden;
+        self.topAccessoryContainer.hidden = !isVisible;
     }];
 }
 
@@ -380,7 +398,7 @@ static CGFloat kAnchorsWidth = 0;
     void(^layout)() = ^{
         UIEdgeInsets insets = self.textFieldInsets;
         CGFloat textRectHeigth = CGRectGetHeight(self.textView.bounds) + insets.top + insets.bottom;
-        CGFloat topAccessoryHeigth = self.topAccessoryView ? self.topAccessoryHeight : 0;
+        CGFloat topAccessoryHeigth = self.isTopAccessoryVisible ? self.topAccessoryHeight : 0;
 
         CGFloat y = insets.top + topAccessoryHeigth;
 
@@ -418,7 +436,7 @@ static CGFloat kAnchorsWidth = 0;
 
     CGFloat fullHeight = height + self.textFieldInsets.top + self.textFieldInsets.bottom;
     CGFloat newHeight = MAX(fullHeight, self.minHeight);
-    if (self.topAccessoryView) {
+    if (self.isTopAccessoryVisible) {
         newHeight += self.topAccessoryHeight;
     }
 

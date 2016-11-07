@@ -57,6 +57,7 @@
 @property (assign, nonatomic) CGFloat minHeight;
 @property (assign, nonatomic) CGFloat topAccessoryHeight;
 @property (weak, nonatomic) UIView *topAccessoryView;
+@property (readonly, nonatomic) BOOL isTopAccessoryVisible;
 @property (readonly, nonatomic) ZIMExpandingTextView *textView;
 @property (readonly, nonatomic) UIBarButtonItem *edgeSeparator;
 @property (readonly, nonatomic) UIButton *inputButton;
