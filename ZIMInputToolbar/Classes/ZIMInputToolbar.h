@@ -70,4 +70,5 @@
 - (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label possibleLabels:(NSSet *)possibleLabels;
 
 - (void)setIsInAlternativeMode:(BOOL)isInAlternativeMode animated:(BOOL)animated;
+- (void)setTopAccessoryView:(UIView *)topAccessoryView animated:(BOOL)animated;
 @end

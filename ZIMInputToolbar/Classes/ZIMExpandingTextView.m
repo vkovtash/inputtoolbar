@@ -373,19 +373,12 @@
 		if (newHeight <= self.maximumHeight) {
             
             if (self.animateHeightChange) {
-                [UIView animateWithDuration:0.2
-                                 animations:^{
-                                     [self updateHeight:newHeight];
-                                 }
-                                 completion:^(BOOL success){
-                                     if (success) {
-                                         [self growDidStop];
-                                     }
-                                 }];
+                [UIView animateWithDuration:0.2 animations:^{
+                    [self updateHeight:newHeight];
+                }];
             }
             else {
                 [self updateHeight:newHeight];
-                [self growDidStop];
             }
 		}
 	}
@@ -436,12 +429,10 @@
     CGRect r = self.frame;
     r.size.height = newHeight;
     self.frame = r;
-}
 
--(void) growDidStop {
-	if ([self.delegate respondsToSelector:@selector(expandingTextView:didChangeHeight:)]) {
-		[self.delegate expandingTextView:self didChangeHeight:self.frame.size.height];
-	}
+    if ([self.delegate respondsToSelector:@selector(expandingTextView:didChangeHeight:)]) {
+        [self.delegate expandingTextView:self didChangeHeight:self.frame.size.height];
+    }
 }
 
 - (void) reloadInputViews {

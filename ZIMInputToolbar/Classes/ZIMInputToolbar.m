@@ -88,7 +88,7 @@ static CGFloat kAnchorsWidth = 0;
     _inputButton = nil;
     _plusButton = nil;
     _minHeight = 44;
-    _topAccessoryHeight = 40;
+    _topAccessoryHeight = 44;
     
     _maxInputButtonTitle = buttonLabel;
     for(NSString *possibleLabel in possibleLabels) {
@@ -119,7 +119,6 @@ static CGFloat kAnchorsWidth = 0;
                                                                                              kAnchorsWidth,
                                                                                              CGRectGetHeight(self.bounds))]];
     _leftTextAnchor.customView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-    _leftTextAnchor.customView.backgroundColor = [UIColor redColor];
     
     _rightTextAnchor =
         [[UIBarButtonItem alloc] initWithCustomView:[[UIView alloc] initWithFrame:CGRectMake(0,
@@ -127,24 +126,18 @@ static CGFloat kAnchorsWidth = 0;
                                                                                              kAnchorsWidth,
                                                                                              CGRectGetHeight(self.bounds))]];
     _rightTextAnchor.customView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-    _rightTextAnchor.customView.backgroundColor = [UIColor redColor];
 
     UIView *topAccessoryContainer = [UIView new];
     [self addSubview:topAccessoryContainer];
     [self sendSubviewToBack:topAccessoryContainer];
     _topAccessoryContainer = topAccessoryContainer;
     _topAccessoryContainer.hidden = _topAccessoryView == nil;
-    _topAccessoryContainer.backgroundColor = [UIColor redColor];
     
     self.textView.delegate = self;
     self.animateHeightChanges = YES;
     
     [self adjustVisibleItemsAnimated:NO];
     [self updateHeight];
-
-    UIView *testView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    testView.backgroundColor = [UIColor greenColor];
-    //self.topAccessoryView = testView;
 }
 
 - (UIButton *)plusButton {
@@ -274,6 +267,10 @@ static CGFloat kAnchorsWidth = 0;
 }
 
 - (void)setTopAccessoryView:(UIView *)topAccessoryView {
+    [self setTopAccessoryView:topAccessoryView animated:NO];
+}
+
+- (void)setTopAccessoryView:(UIView *)topAccessoryView animated:(BOOL)animated {
     if (_topAccessoryView == topAccessoryView) {
         return;
     }
@@ -283,8 +280,27 @@ static CGFloat kAnchorsWidth = 0;
         [self.topAccessoryContainer addSubview:topAccessoryView];
     }
     _topAccessoryView = topAccessoryView;
-    _topAccessoryContainer.hidden == _topAccessoryView == nil;
-    [self updateHeight];
+    _topAccessoryView.frame = _topAccessoryContainer.bounds;
+
+    BOOL isHidden = _topAccessoryView == nil;
+
+    if (!animated) {
+        _topAccessoryContainer.hidden = isHidden;
+        _topAccessoryView.alpha = isHidden ? 0.0f : 1.0f;
+        [self updateHeight];
+        return;
+    }
+
+    if (!isHidden) {
+        _topAccessoryContainer.hidden = NO;
+    }
+
+    [UIView animateWithDuration:0.2 animations:^{
+        self.topAccessoryView.alpha = isHidden ? 0.0f : 1.0f;
+        [self updateHeight];
+    } completion:^(BOOL isFinished) {
+        self.topAccessoryContainer.hidden = isHidden;
+    }];
 }
 
 - (void)setTopAccessoryHeight:(CGFloat)topAccessoryHeight {
@@ -362,17 +378,14 @@ static CGFloat kAnchorsWidth = 0;
 
 - (void)layoutExpandingTextViewAnimated:(BOOL)animated {
     void(^layout)() = ^{
-
-        CGFloat textViewHeigth = CGRectGetHeight(self.textView.frame);
-        CGFloat topAccessoryHeigth = self.topAccessoryView ? self.topAccessoryHeight : 0;
         UIEdgeInsets insets = self.textFieldInsets;
+        CGFloat textRectHeigth = CGRectGetHeight(self.textView.bounds) + insets.top + insets.bottom;
+        CGFloat topAccessoryHeigth = self.topAccessoryView ? self.topAccessoryHeight : 0;
 
-        CGFloat y = 0;
-        if (textViewHeigth + insets.top + insets.bottom < CGRectGetHeight(self.bounds) - topAccessoryHeigth) {
-            y = (CGRectGetHeight(self.bounds) - topAccessoryHeigth - textViewHeigth) / 2;
-        }
-        else {
-            y = insets.top;
+        CGFloat y = insets.top + topAccessoryHeigth;
+
+        if (textRectHeigth < self.minHeight) {
+            y += (self.minHeight - textRectHeigth) / 2;
         }
 
         CGRect frame = self.textView.frame;
@@ -380,7 +393,7 @@ static CGFloat kAnchorsWidth = 0;
                            CGRectGetMaxX(self.leftTextAnchor.customView.frame) -
                            insets.left - insets.right;
         frame.origin.x = CGRectGetMaxX(self.leftTextAnchor.customView.frame) + insets.left;
-        frame.origin.y = y + topAccessoryHeigth;
+        frame.origin.y = y;
         self.textView.frame = frame;
 
         self.topAccessoryContainer.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), self.topAccessoryHeight);
@@ -395,12 +408,12 @@ static CGFloat kAnchorsWidth = 0;
 }
 
 - (void)updateHeight {
-        [self expandingTextView:_textView willChangeHeight:CGRectGetHeight(self.textView.frame)];
+        [self expandingTextView:_textView didChangeHeight:CGRectGetHeight(self.textView.frame)];
 }
 
 #pragma mark - UIExpandingTextView delegate
 
-- (void)expandingTextView:(ZIMExpandingTextView *)expandingTextView willChangeHeight:(CGFloat)height {
+- (void)expandingTextView:(ZIMExpandingTextView *)expandingTextView didChangeHeight:(CGFloat)height {
     /* Adjust the height of the toolbar when the input component expands */
 
     CGFloat fullHeight = height + self.textFieldInsets.top + self.textFieldInsets.bottom;
@@ -421,7 +434,7 @@ static CGFloat kAnchorsWidth = 0;
     if ([self.inputDelegate respondsToSelector:@selector(inputToolbar:willChangeHeight:)]) {
         [self.inputDelegate inputToolbar:self willChangeHeight:CGRectGetHeight(newBounds)];
     }
-    
+
     self.bounds = newBounds;
     self.center = newCenter;
 
