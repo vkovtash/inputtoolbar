@@ -33,7 +33,7 @@
 #define kTextInsetX 4
 
 @interface ZIMExpandingTextView()
-
+@property (assign, nonatomic) CGFloat currentWidth;
 @end
 
 @implementation ZIMExpandingTextView
@@ -120,8 +120,19 @@
         
         [self clearText];
         [self sizeToFit];
+        self.currentWidth = CGRectGetWidth(self.internalTextView.bounds);
     }
     return self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    // Should recalculate text view height on width change
+    CGFloat newWidth = CGRectGetWidth(self.internalTextView.bounds);
+    if (self.currentWidth != newWidth) {
+        self.currentWidth = newWidth;
+        [self textViewDidChange:self.internalTextView];
+    }
 }
 
 - (void) setRightView:(UIView *)rightView {
