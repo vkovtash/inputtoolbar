@@ -178,7 +178,7 @@ static CGFloat kAnchorsWidth = 0;
     _alternativeInputViewController = alternativeInputViewController;
     if (_alternativeInputViewController) {
         [self adjustVisibleItemsAnimated:NO];
-        [self layoutExpandingTextViewAnimated:NO];
+        [self updateHeight];
     }
 }
 
