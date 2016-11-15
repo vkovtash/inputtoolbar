@@ -178,7 +178,7 @@ static CGFloat kAnchorsWidth = 0;
     _alternativeInputViewController = alternativeInputViewController;
     if (_alternativeInputViewController) {
         [self adjustVisibleItemsAnimated:NO];
-        [self updateHeight];
+        [self layoutExpandingTextViewAnimated:NO];
     }
 }
 
@@ -213,6 +213,7 @@ static CGFloat kAnchorsWidth = 0;
     }
     
     void(^animations)() = ^{
+        [self updateHeight];
         [self adjustVisibleItemsAnimated:animated];
         [self layoutExpandingTextViewAnimated:NO];
         self.textView.alpha = _isInAlternativeMode ? 0 : 1;
