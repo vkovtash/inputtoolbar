@@ -58,10 +58,6 @@ static CGFloat kAnchorsWidth = 0;
     return self;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label {
-    return [self initWithFrame:frame label:label possibleLabels:nil];
-}
-
 - (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label possibleLabels:(NSSet *)possibleLabels {
     if ((self = [super initWithFrame:frame])) {
         [self setupToolbar:label possibleLabels:possibleLabels];
@@ -69,18 +65,33 @@ static CGFloat kAnchorsWidth = 0;
     return self;
 }
 
+- (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label {
+    return [self initWithFrame:frame label:label possibleLabels:nil];
+}
+
 - (instancetype)initWithFrame:(CGRect)frame {
-    if ((self = [super initWithFrame:frame])) {
-        [self setupToolbar:kInputButtonTitleSend possibleLabels:[NSSet setWithObjects:kInputButtonTitleSend, nil]];
-    }
-    return self;
+    return [self initWithFrame:frame
+                         label:kInputButtonTitleSend
+                possibleLabels:[NSSet setWithObjects:kInputButtonTitleSend, nil]];
 }
 
 - (instancetype)init {
-    if ((self = [super init])) {
-        [self setupToolbar:kInputButtonTitleSend possibleLabels:nil];
-    }
-    return self;
+    return [self initWithFrame:CGRectMake(0, 0, 40, 40) label:kInputButtonTitleSend possibleLabels:nil];
+}
+
++ (instancetype)defaultToolbarWithFrame:(CGRect)frame {
+    ZIMInputToolbar *toolbar = [[self alloc] initWithFrame:frame];
+
+    /* Custom Background image */
+    UIImage *textViewBackgroundImage = [UIImage imageNamed:@"textbg_7"];
+    textViewBackgroundImage =
+        [textViewBackgroundImage resizableImageWithCapInsets:UIEdgeInsetsMake(floorf(textViewBackgroundImage.size.height / 2),
+                                                                              floorf(textViewBackgroundImage.size.width / 2),
+                                                                              floorf(textViewBackgroundImage.size.height / 2),
+                                                                              floorf(textViewBackgroundImage.size.width / 2))];
+
+    toolbar.textView.textViewBackgroundImage.image = textViewBackgroundImage;
+    return toolbar;
 }
 
 - (void)setupToolbar:(NSString *)buttonLabel possibleLabels:(NSSet *)possibleLabels {

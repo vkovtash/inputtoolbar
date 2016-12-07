@@ -73,21 +73,11 @@
         self.textViewBackgroundImage = [[UIImageView alloc] initWithFrame:backgroundFrame];
         self.internalTextView = [[UITextView alloc] initWithFrame:self.textViewBackgroundImage.bounds];
         self.placeholderLabel = [[UILabel alloc] initWithFrame: textViewFrame];
-        
-        /* Custom Background image */
-        UIImage *textViewBackgroundImage = nil;
-        
-        textViewBackgroundImage = [UIImage imageNamed:@"textbg_7"];
+
         UIEdgeInsets originalInset = self.internalTextView.textContainerInset;
         originalInset.bottom = 6;
         self.internalTextView.textContainerInset = originalInset;
-        
-        textViewBackgroundImage = [textViewBackgroundImage resizableImageWithCapInsets:UIEdgeInsetsMake(floorf(textViewBackgroundImage.size.height/2),
-                                                                                                        floorf(textViewBackgroundImage.size.width/2),
-                                                                                                        floorf(textViewBackgroundImage.size.height/2),
-                                                                                                        floorf(textViewBackgroundImage.size.width/2))];
-        
-        self.textViewBackgroundImage.image = textViewBackgroundImage;
+
         self.textViewBackgroundImage.contentMode = UIViewContentModeScaleToFill;
         self.textViewBackgroundImage.clipsToBounds = YES;
         self.textViewBackgroundImage.userInteractionEnabled = YES;
