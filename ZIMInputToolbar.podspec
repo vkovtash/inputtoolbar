@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "ZIMInputToolbar"
-  s.version      = "0.9.0"
+  s.version      = "0.9.1"
   s.platform = :ios , "8.0"
   s.ios.deployment_target = "8.0"
   s.summary      = "Messages style input toolbar for iOS."
