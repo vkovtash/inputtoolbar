@@ -387,8 +387,7 @@ static CGFloat kAnchorsWidth = 0;
 }
 
 - (void)inputButtonPressed {
-    if ([self.textView.text length] > 0 &&
-        [self.inputDelegate respondsToSelector:@selector(inputButtonPressed:)]) {
+    if ([self.inputDelegate respondsToSelector:@selector(inputButtonPressed:)]) {
         [self.inputDelegate inputButtonPressed:self];
     }
 }
