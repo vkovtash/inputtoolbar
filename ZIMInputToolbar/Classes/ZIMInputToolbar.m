@@ -344,6 +344,15 @@ static CGFloat kAnchorsWidth = 0;
     self.inputButton.enabled = _isInputButtonEnabled && self.textView.text.length > 0;
 }
 
+- (void)setDisableInputButtonAutomatically:(BOOL)disableInputButtonAutomatically {
+    _disableInputButtonAutomatically = disableInputButtonAutomatically;
+    [self updateInputButton];
+    
+    if (!disableInputButtonAutomatically) {
+        self.inputButton.enabled = YES;
+    }
+}
+
 - (BOOL)animateHeightChanges {
     return self.textView.animateHeightChange;
 }
@@ -369,6 +378,12 @@ static CGFloat kAnchorsWidth = 0;
     self.leftBarButtonItem.customView.center = point;
 
     [self layoutExpandingTextViewAnimated:NO];
+}
+
+- (void)updateInputButton {
+    if (self.disableInputButtonAutomatically) {
+        self.inputButton.enabled = self.isInputButtonEnabled && self.textView.text.length > 0;
+    }
 }
 
 - (void)inputButtonPressed {
@@ -480,8 +495,7 @@ static CGFloat kAnchorsWidth = 0;
 }
 
 - (void)expandingTextViewDidChange:(ZIMExpandingTextView *)expandingTextView {
-    /* Enable/Disable the button */
-    self.inputButton.enabled = self.isInputButtonEnabled && expandingTextView.text.length > 0;
+    [self updateInputButton];
     
     if ([self.inputDelegate respondsToSelector:@selector(inputToolbarViewDidChange:)]) {
         [self.inputDelegate inputToolbarViewDidChange:self];

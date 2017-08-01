@@ -67,6 +67,8 @@
 @property (strong, nonatomic) NSArray *alternativeBarButtonItems;
 @property (weak, nonatomic) id <ZIMInputToolbarDelegate> inputDelegate;
 @property (assign, nonatomic) BOOL isInputButtonEnabled;
+@property (assign, nonatomic) BOOL disableInputButtonAutomatically;
+
 
 - (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label;
 - (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label possibleLabels:(NSSet *)possibleLabels;
