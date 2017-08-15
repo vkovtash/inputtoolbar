@@ -44,6 +44,8 @@ static CGFloat kAnchorsWidth = 0;
 @property (strong, nonatomic) UIBarButtonItem *leftTextAnchor;
 @property (strong, nonatomic) UIBarButtonItem *rightTextAnchor;
 @property (strong, nonatomic) UIView *topAccessoryContainer;
+@property (weak, nonatomic) UIView *rigthButtonPlaceholder;
+@property (weak, nonatomic) UIView *leftButtonPlaceholder;
 @end
 
 @implementation ZIMInputToolbar
@@ -109,10 +111,16 @@ static CGFloat kAnchorsWidth = 0;
         }
     }
     
-    _rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.inputButton];
-    _rightBarButtonItem.customView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-    _leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.plusButton];
-    _leftBarButtonItem.customView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    [self addSubview:self.inputButton];
+    [self addSubview:self.plusButton];
+    
+    UIView *rigthButtonPlaceholder = [[UIView alloc] initWithFrame:self.inputButton.frame];
+    _rigthButtonPlaceholder = rigthButtonPlaceholder;
+    _rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rigthButtonPlaceholder];
+    
+    UIView *leftButtonPlaceholder = [[UIView alloc] initWithFrame:self.plusButton.frame];
+    _leftButtonPlaceholder = leftButtonPlaceholder;
+    _leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButtonPlaceholder];
     
     [self.inputButton setTitle:buttonLabel forState:UIControlStateNormal];
     [self.inputButton addTarget:self action:@selector(inputButtonPressed) forControlEvents:UIControlEventTouchUpInside];
@@ -120,7 +128,7 @@ static CGFloat kAnchorsWidth = 0;
     
     /* Create UIExpandingTextView input */
     _textView = [[ZIMExpandingTextView alloc] initWithFrame:self.bounds];
-    _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    _textView.translatesAutoresizingMaskIntoConstraints = NO;
     _textView.center = CGPointMake(_textView.center.x, CGRectGetMidY(self.bounds));
     _textView.clipsToBounds = YES;
     [self addSubview:_textView];
@@ -148,8 +156,12 @@ static CGFloat kAnchorsWidth = 0;
     self.textView.delegate = self;
     self.animateHeightChanges = YES;
     
-    [self adjustVisibleItemsAnimated:NO];
+    [self adjustVisibleItems];
     [self updateHeight];
+}
+
+- (BOOL)usesOldSchoolLayout {
+    return _leftTextAnchor.customView.superview == self;
 }
 
 - (UIButton *)plusButton {
@@ -188,7 +200,7 @@ static CGFloat kAnchorsWidth = 0;
 - (void)setAlternativeInputViewController:(UIInputViewController *)alternativeInputViewController {
     _alternativeInputViewController = alternativeInputViewController;
     if (_alternativeInputViewController) {
-        [self adjustVisibleItemsAnimated:NO];
+        [self adjustVisibleItems];
         [self layoutExpandingTextViewAnimated:NO];
     }
 }
@@ -215,19 +227,23 @@ static CGFloat kAnchorsWidth = 0;
     }
     _isInAlternativeMode = isInAlternativeMode;
     
-    if (_isInAlternativeMode) {
-        self.textBackup = self.textView.text;
-        self.textView.text = @"";
-    }
-    else {
-        self.textView.text = self.textBackup;
-    }
-    
     void(^animations)() = ^{
+        if (isInAlternativeMode) {
+            self.textBackup = self.textView.text;
+            self.textView.text = @"";
+        }
+        else {
+            self.textView.text = self.textBackup;
+            self.textBackup = nil;
+        }
+        
         [self updateHeight];
-        [self adjustVisibleItemsAnimated:animated];
-        [self layoutExpandingTextViewAnimated:NO];
-        self.textView.alpha = _isInAlternativeMode ? 0 : 1;
+        
+        [self adjustVisibleItems];
+        
+        [UIView performWithoutAnimation:^{
+            [self layoutSubviews];
+        }];
     };
     
     if (animated) {
@@ -296,6 +312,7 @@ static CGFloat kAnchorsWidth = 0;
     [_topAccessoryView removeFromSuperview];
     if (topAccessoryView) {
         [self.topAccessoryContainer addSubview:topAccessoryView];
+        [self bringSubviewToFront:self.topAccessoryContainer];
     }
     _topAccessoryView = topAccessoryView;
     _topAccessoryView.frame = _topAccessoryContainer.bounds;
@@ -363,21 +380,25 @@ static CGFloat kAnchorsWidth = 0;
     self.leftBarButtonItem.tintColor = tintColor;
 }
 
+static inline layoutBarButton(UIToolbar *toolbar, UIView *button, CGFloat Y) {
+    if (button.superview == toolbar) {
+        CGPoint point = button.center;
+        point.y = Y;
+        button.center = point;
+    }
+    else {
+        CGPoint point = button.superview.center;
+        point.y = Y;
+        button.superview.center = point;
+        button.superview.backgroundColor = [UIColor redColor];
+        button.backgroundColor = [UIColor greenColor];
+    }
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
-
-    CGFloat newY = CGRectGetHeight(self.bounds) - self.minHeight / 2;
-
-    CGPoint point;
-    point = self.rightBarButtonItem.customView.center;
-    point.y = newY;
-    self.rightBarButtonItem.customView.center = point;
-
-    point = self.leftBarButtonItem.customView.center;
-    point.y = newY;
-    self.leftBarButtonItem.customView.center = point;
-
     [self layoutExpandingTextViewAnimated:NO];
+    [self layoutBarButtons];
 }
 
 - (void)updateInputButton {
@@ -400,7 +421,7 @@ static CGFloat kAnchorsWidth = 0;
     }
 }
 
-- (void)adjustVisibleItemsAnimated:(BOOL)animated {
+- (void)adjustVisibleItems {
     NSMutableArray *barItems = [NSMutableArray array];
     
     [barItems addObject:self.edgeSeparator];
@@ -408,6 +429,11 @@ static CGFloat kAnchorsWidth = 0;
     if (self.isPlusButtonVisible) {
         [barItems addObject:self.leftBarButtonItem];
     }
+    
+    UIBarButtonItem *inset = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    inset.width = self.usesOldSchoolLayout ? -5 : 5;
+    
+    [barItems addObject:inset];
     
     if (self.isInAlternativeMode) {
         [barItems addObject:self.leftTextAnchor];
@@ -423,7 +449,41 @@ static CGFloat kAnchorsWidth = 0;
     
     [barItems addObject:self.edgeSeparator];
     
-    [self setItems:barItems animated:animated];
+    [self setItems:barItems animated:NO];
+    
+    self.textView.alpha = self.isInAlternativeMode ? 0 : 1;
+    
+    self.inputButton.alpha = self.isInAlternativeMode ? 0 : 1;
+    self.inputButton.userInteractionEnabled = !self.isInAlternativeMode;
+    
+    self.plusButton.alpha = self.isPlusButtonVisible ? 1 : 0;
+    self.plusButton.userInteractionEnabled = self.isPlusButtonVisible;
+    
+    [self setNeedsLayout];
+}
+
+- (void)layoutBarButtons {
+    UIView *rigthButtonPlaceholder = self.rightBarButtonItem.customView;
+    UIView *leftButtonPlaceholder = self.leftBarButtonItem.customView;
+    
+    [self bringSubviewToFront:self.plusButton];
+    [self bringSubviewToFront:self.inputButton];
+    
+    CGFloat newY = CGRectGetHeight(self.bounds) - self.minHeight;
+    
+    if (rigthButtonPlaceholder.window) {
+        CGRect rect = [self convertRect:rigthButtonPlaceholder.bounds fromView:rigthButtonPlaceholder];
+        rect.origin.y = newY;
+        rect.size.height = self.minHeight;
+        self.inputButton.frame = rect;
+    }
+
+    if (leftButtonPlaceholder.window) {
+        CGRect rect = [self convertRect:leftButtonPlaceholder.bounds fromView:leftButtonPlaceholder];
+        rect.origin.y = newY;
+        rect.size.height = self.minHeight;
+        self.plusButton.frame = rect;
+    }
 }
 
 - (void)layoutExpandingTextViewAnimated:(BOOL)animated {
@@ -437,23 +497,32 @@ static CGFloat kAnchorsWidth = 0;
         if (textRectHeigth < self.minHeight) {
             y += (self.minHeight - textRectHeigth) / 2;
         }
+        
+        UIView *rightAnchorView = self.rightTextAnchor.customView;
+        UIView *leftAnchorView = self.leftTextAnchor.customView;
+        
+        CGRect rightAnchorFrame = [self convertRect:rightAnchorView.bounds fromView:rightAnchorView];
+        CGRect leftAnchorFrame = [self convertRect:leftAnchorView.bounds fromView:leftAnchorView];
 
         CGRect frame = self.textView.frame;
-        frame.size.width = CGRectGetMinX(self.rightTextAnchor.customView.frame) -
-                           CGRectGetMaxX(self.leftTextAnchor.customView.frame) -
-                           insets.left - insets.right;
-        frame.origin.x = CGRectGetMaxX(self.leftTextAnchor.customView.frame) + insets.left;
+        frame.size.width = CGRectGetMinX(rightAnchorFrame) - CGRectGetMaxX(leftAnchorFrame) - insets.left - insets.right;
+        frame.origin.x = CGRectGetMaxX(leftAnchorFrame) + insets.left;
         frame.origin.y = y;
         self.textView.frame = frame;
 
         self.topAccessoryContainer.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), self.topAccessoryHeight);
+        [self bringSubviewToFront:self.textView];
     };
+    
+    [UIView performWithoutAnimation:^{
+        [super layoutIfNeeded];
+    }];
     
     if (animated) {
         [UIView animateWithDuration:0.2 animations:layout];
     }
     else {
-        layout();
+        [UIView performWithoutAnimation:layout];
     }
 }
 

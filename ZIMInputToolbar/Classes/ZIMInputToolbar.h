@@ -68,6 +68,7 @@
 @property (weak, nonatomic) id <ZIMInputToolbarDelegate> inputDelegate;
 @property (assign, nonatomic) BOOL isInputButtonEnabled;
 @property (assign, nonatomic) BOOL disableInputButtonAutomatically;
+@property (readonly, nonatomic) BOOL usesOldSchoolLayout; // Pre iOS 11 layout
 
 
 - (instancetype)initWithFrame:(CGRect)frame label:(NSString *)label;
